@@ -1,6 +1,6 @@
-import Tokenizer from "./Parser/partial/Tokenizer.js.js";
-import Lexer from "./Parser/partial/Lexer.js.js";
-import Parser from "./Parser/partial/Parser.js.js";
+import Tokenizer from "./partial/Tokenizer.js";
+import Lexer from "./partial/Lexer.js";
+import Parser from "./partial/Parser.js";
 
 class JSONParser {
     constructor() {
