@@ -5,11 +5,8 @@ function tokenizer(str) {
     const tokens = new Stack();
     let curStr = '';
     let curNum = '';
-    let curBool = '';
     let strFlag = false;
     let numFlag = false;
-    let booleanFlag = false;
-    let nullFlag = false;
 
     const bracketRegex = /(\[|\])|(\(|\))|(\{|\})/;
     const numRegex = /[0-9|.]/;
@@ -17,22 +14,22 @@ function tokenizer(str) {
 
     for (let i = 0; i < str.length; i++) {
 
-        if(str[i] === '"') {
-            strFlag = !strFlag; 
+        if (str[i] === '"') {
+            strFlag = !strFlag;
         }
 
-        // 따옴표 내부가 아니라면
-        if (!strFlag) {
-            if (curStr) {   
+      
+        if (!strFlag) {   // 따옴표 내부가 아니라면 
+            if (curStr) {
                 tokens.push(curStr + '"');
                 curStr = '';
             }
-           
+
             // 숫자 토큰화
             if (str[i].match(numRegex)) {
                 numFlag = true;
                 curNum += str[i];
-            } else if(curNum) {
+            } else if (curNum) {
                 numFlag = false;
                 tokens.push(Number(curNum));
                 curNum = '';
@@ -42,22 +39,24 @@ function tokenizer(str) {
             if (str[i].match(bracketRegex)) tokens.push(str[i]);
 
             // boolean 토큰화
-           // , 다음에 따옴표로 시작하지않으면 일단 스트링은 아님.. 다음 쉼표까지 닫아버리기?
+            if (str[i] === 't' && str[i+1] === 'r' && str[i+2] === 'u' && str[i+3] === 'e') tokens.push(true);
+            if (str[i] === 'f' && str[i+1] === 'a' && str[i+2] === 'l' && str[i+3] === 's' && str[i+4] === 'e') tokens.push(false);
+
+            // null 토큰화
+            if (str[i] === 'n' && str[i+1] === 'u' && str[i+2] === 'l' && str[i+3] === 'l') tokens.push(null);
 
 
-
-        // 문자 토큰화
+            // 문자 토큰화
         } else {
             curStr += str[i];
         }
     }
 
-
     console.log(tokens.stack);
     return tokens.stack;
 }
 
-const a = '["1 2 3", 23, true, null, {3.214}, {"key":"value"} "234ho"]';   
+const a = '["1 2 3", 23, true, null, {3.214}, {"key":false} "234ho"]';
 tokenizer(a);
 
 // export default tokenizer;
