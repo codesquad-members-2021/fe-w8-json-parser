@@ -2,7 +2,7 @@
   "name": "fe-w8-json-parser",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.bundle.js",
   "scripts": {
     "build": "webpack --watch --mode development",
     "prod": "webpack --mode production",
