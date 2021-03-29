@@ -1,4 +1,6 @@
 import '../scss/style.scss';
+import MainView from '../view/view';
+const mainView = new MainView();
 
 // import dataJson from "../data/data.js";
 const data = `const data = "[1]";`;
