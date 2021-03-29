@@ -29,3 +29,16 @@ const data = "[1]"
      type: "object",
      child: ""
      }
+
+// identifier : 식별하기 위한 이름- > 변수명 dataArr,
+// keyword : 미리 지정한 예약어 -> ex) const, if, for, class, while, forEach..
+// separator : 글자를 구분하는 문자 -> 구분자 ex) {, }, [, ], ,
+// operator : 연산을 위한 심볼 -> ex) + - ,%, =, ;,
+// literal : 숫자, 논리, 문자 -> true, 3.14, &&,
+// comment : 줄 또는 블록 코멘터리 -> 주석..
+
+// idetifier -> '1a3', "key:",
+// keyword ->
+// speparator -> [] {} '' :
+// operator =>
+// literal => '11', 912, 'hello', 'world', true, Null, false
