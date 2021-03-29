@@ -59,7 +59,7 @@ function tokenizer(str) {
 const a = '["1 2 3", 23, true, null, {3.214}, {"key":false} "234ho"]';
 tokenizer(a);
 
-// export default tokenizer;
+export default tokenizer;
 
 
 
