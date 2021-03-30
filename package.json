@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "app.bundle.js",
+  "main": "webpack.config.js",
   "scripts": {
     "build": "webpack --watch --mode development",
     "prod": "webpack --mode production",

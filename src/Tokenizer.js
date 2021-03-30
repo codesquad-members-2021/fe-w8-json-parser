@@ -31,7 +31,11 @@ function tokenizer(str) {
                 curNum += str[i];
             } else if (curNum) {
                 numFlag = false;
+<<<<<<< HEAD
                 tokens.push(Number(curNum));
+=======
+                tokens.push(curNum);
+>>>>>>> fb8facdf305e94cd37c548284a2372232ee81b0f
                 curNum = '';
             }
 
@@ -39,12 +43,23 @@ function tokenizer(str) {
             if (str[i].match(bracketRegex)) tokens.push(str[i]);
 
             // boolean 토큰화
+<<<<<<< HEAD
             if (str[i] === 't' && str[i+1] === 'r' && str[i+2] === 'u' && str[i+3] === 'e') tokens.push(true);
             if (str[i] === 'f' && str[i+1] === 'a' && str[i+2] === 'l' && str[i+3] === 's' && str[i+4] === 'e') tokens.push(false);
 
             // null 토큰화
             if (str[i] === 'n' && str[i+1] === 'u' && str[i+2] === 'l' && str[i+3] === 'l') tokens.push(null);
 
+=======
+            if (str[i] === 't' && str[i+1] === 'r' && str[i+2] === 'u' && str[i+3] === 'e') tokens.push('true');
+            if (str[i] === 'f' && str[i+1] === 'a' && str[i+2] === 'l' && str[i+3] === 's' && str[i+4] === 'e') tokens.push('false');
+
+            // null 토큰화
+            if (str[i] === 'n' && str[i+1] === 'u' && str[i+2] === 'l' && str[i+3] === 'l') tokens.push('null');
+
+            // 콜론 토큰화
+            if (str[i] === ':') tokens.push(':');
+>>>>>>> fb8facdf305e94cd37c548284a2372232ee81b0f
 
             // 문자 토큰화
         } else {
@@ -52,6 +67,7 @@ function tokenizer(str) {
         }
     }
 
+<<<<<<< HEAD
     console.log(tokens.stack);
     return tokens.stack;
 }
@@ -59,6 +75,11 @@ function tokenizer(str) {
 const a = '["1 2 3", 23, true, null, {3.214}, {"key":false} "234ho"]';
 tokenizer(a);
 
+=======
+    return tokens.stack;
+}
+
+>>>>>>> fb8facdf305e94cd37c548284a2372232ee81b0f
 export default tokenizer;
 
 
