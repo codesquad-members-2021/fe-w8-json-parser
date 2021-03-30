@@ -1,22 +1,33 @@
 // Tokenizer : token 으로 자르기 -> 잘라진 토큰 정보가 모인 배열을 반환할 수 있음
 class Tokenizer {
-    constructor(data) {
-        // https://lucas.codesquad.kr/main/course/마스터즈-FE-클래스/8주차-JSON-Parser/AST생성과-분석
+    constructor() {
         this.tokenType = {
-            IDENTIFIER: /type|child|value|propKey|propValue/,
-            KEYWORD: /if|for|class|else|/,
-            SEPARATOR: /\{|\}|\[|\]|\,/,
-            OPERATOR: /\+|<|>|=|\*|\/|-/,
-            LITERAL: 'literal',
-            COMMENT: 'comment',
+            SEPARATOR: /\{|\}|\[|\]|\,|:|\s/,
+            LITERAL: /null|undefined|(true|false)|(-?[0-9]+(?:\.[0-9]+)?)|("(?:[^"\\]*|\\")*")/,
         };
-
-        this.data = data;
+        this.stack = [];
     };
     getTokenType = (charData) => {
+        const { SEPARATOR, LITERAL } = this.tokenType;
+        let charDataTemp = charData;
 
+        while (charDataTemp.length > 0) {
+            if (charDataTemp[0] === " ") {
+                charDataTemp = charDataTemp.slice(1);
+                continue;
+            }
+
+            if (SEPARATOR.test(charDataTemp) && SEPARATOR.test(charDataTemp[0])) {
+                const currentStr = charDataTemp.match(SEPARATOR)[0];
+                charDataTemp = charDataTemp.replace(currentStr, '');
+                this.stack.push(currentStr);
+            } else {
+                const currentStr = charDataTemp.match(LITERAL)[0];
+                charDataTemp = charDataTemp.replace(currentStr, '');
+                this.stack.push(currentStr);
+            }
+        }
     };
-
 }
 
 export default Tokenizer;

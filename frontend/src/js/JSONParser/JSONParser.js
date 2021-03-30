@@ -1,11 +1,33 @@
-import Tokenizer from "./partial/Tokenizer.js";
-import Lexer from "./partial/Lexer.js";
-import Parser from "./partial/Parser.js";
+import _ from '../util.js';
 
 class JSONParser {
-    constructor() {
-
+    constructor(parserReference, { tokenizer, lexer, parser }) {
+        const {
+            inputTextAreaSelector,
+            resultTextAreaSelector,
+            analysisBtnSelector,
+        } = parserReference;
+        this.inputTextArea = _.$(inputTextAreaSelector);
+        this.resultTextArea = _.$(resultTextAreaSelector);
+        this.analysisBtn = _.$(analysisBtnSelector);
+        this.tokenizer = tokenizer;
+        this.lexer = lexer;
+        this.parser = parser;
     }
+
+    init = () => {
+        this.setAnalysisBtnClickEvent(this.analysisBtn);
+    };
+
+    setAnalysisBtnClickEvent = (analysisBtn) =>
+        _.ON(analysisBtn, 'click', (e) => this.analysisBtnClickEventHandler(e));
+    analysisBtnClickEventHandler = () => {
+        const testData =
+            '["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, "world"]},112],55, "99"],{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]';
+        this.tokenizer.getTokenType(testData);
+        console.log(this.tokenizer.stack);
+        this.resultTextArea.value = this.tokenizer.stack.join(' ');
+    };
 }
 
 export default JSONParser;

@@ -1,9 +1,18 @@
-import JSONParser from "./JSONParser/JSONParser.js";
+import JSONParser from './JSONParser/JSONParser.js';
+import Tokenizer from './JSONParser/partial/Tokenizer.js';
+import Lexer from './JSONParser/partial/Lexer.js';
+import Parser from './JSONParser/partial/Parser.js';
 
 const REFERENCE = {
-    allWrapperSelector: '.allWrapper',
-    dataBeforeChangeSelector: '.dataBeforeInput',
-    dataAfterChangeSelector: '.dataAfterTextArea',
+    inputTextAreaSelector: '.json-container__input',
+    resultTextAreaSelector: '.result-container__result__detail',
+    analysisBtnSelector: '.json-container__btn',
 };
 
-new JSONParser();
+const parserModule = {
+    tokenizer: new Tokenizer(),
+    lexer: new Lexer(),
+    parser: new Parser(),
+};
+
+new JSONParser(REFERENCE, parserModule).init();
