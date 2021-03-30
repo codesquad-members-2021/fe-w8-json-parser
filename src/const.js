@@ -9,6 +9,6 @@ export const Type = {
   BOOLEAN: 'boolean',
   NUMBER: 'number',
   OBJECT: 'object',
+  NULL: 'object',
   ARRAY: 'array',
-  NULL: 'null',
 }
