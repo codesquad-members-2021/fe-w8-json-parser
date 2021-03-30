@@ -10,11 +10,11 @@ class Tokenizer {
             OPERATOR: /\+|\<|\>|\=|\*|\/|\-/,
             LITERAL: 'literal',
         };
-    };
+    }
     getTokenType = (charData) => {
-
+        const inputData = [...charData];
+        console.log(inputData);
     };
-
 }
 
 export default Tokenizer;
