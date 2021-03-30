@@ -6,7 +6,7 @@ class Tokenizer {
             IDENTIFIER: /type|child|value|propKey|propValue/,
             KEYWORD: /if|for|class|else|/,
             SEPARATOR: /\{|\}|\[|\]|\,/,
-            OPERATOR: /\+|<|>|=|\*|\/|-/,
+            OPERATOR: /\+|\<|\>|\=|\*|\/|\-/,
             LITERAL: 'literal',
             COMMENT: 'comment',
         };
