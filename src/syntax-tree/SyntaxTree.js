@@ -3,9 +3,8 @@ import TypeNode from './SyntaxTreeNode.js';
 import SyntaxTreeNode from './SyntaxTreeNode.js';
 
 export default class SyntaxTree {
-  constructor({ type, value }) {
-    this.root = new SyntaxTreeNode({ type });
-    this.root.appendValue(value);
+  constructor() {
+    this.root = new SyntaxTreeRootNode();
   }
 
   getRoot() {
@@ -14,5 +13,11 @@ export default class SyntaxTree {
 
   toString() {
     return this.root.toString();
+  }
+}
+
+class SyntaxTreeRootNode extends SyntaxTreeNode{
+  constructor() {
+    super({ type: 'root'});
   }
 }

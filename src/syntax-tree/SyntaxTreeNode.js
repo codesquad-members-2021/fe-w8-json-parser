@@ -1,20 +1,17 @@
 export default class SyntaxTreeNode {
-  constructor({ type }) {
+  constructor({ type, value, propKey, propValue }) {
     this.type = type;
+    this.child = [];
+    this.value = value;
+    this.propKey = propKey;
+    this.propValue = propValue;
   }
 
-  appendValue(value) {
-    if (typeof value === 'string' || value instanceof String)
-      throw new Error(`Invalid value, ${value}`);
+  appendChild(node) {
+    if (!node instanceof SyntaxTreeNode)
+      throw new Error(`Invalid node, ${node}`);
 
-    this["value"] = value;
-  }
-
-  appendChild(child) {
-    if (typeof child === 'object' && child.constructor === Array)
-      throw new Error(`Invalid child, ${child}`);
-
-    this["child"] = child;
+    this.child.push(node);
   }
 
   getType() {
@@ -38,6 +35,9 @@ export default class SyntaxTreeNode {
         continue;
       }
 
+      if (prop.length === 0)
+        continue;
+
       result += this.v.reduce((str, child) => { return str + child.toString(); }, '"child" : [\n');
       result += '],\n';
     }
@@ -45,4 +45,8 @@ export default class SyntaxTreeNode {
     result += '},\n';
     return result;
   }
+}
+
+function toStringObjectProperty(node) {
+  
 }
