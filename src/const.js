@@ -12,5 +12,4 @@ export const Type = {
   OBJECT_PROPERTY: 'objectProperty',
   NULL: 'object',
   ARRAY: 'array',
-  ARRAY_OBJECT: 'arrayObject'
 }

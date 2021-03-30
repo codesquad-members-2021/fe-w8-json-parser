@@ -1,7 +1,7 @@
 export default class SyntaxTreeNode {
-  constructor({ type, value, propKey, propValue }) {
+  constructor({ type, value, propKey, propValue } = {}) {
     this.type = type;
-    this.child = [];
+    this.child;
     this.value = value;
     this.propKey = propKey;
     this.propValue = propValue;
@@ -11,7 +11,32 @@ export default class SyntaxTreeNode {
     if (!node instanceof SyntaxTreeNode)
       throw new Error(`Invalid node, ${node}`);
 
+    if (!this.child)
+      this.child = [];
+
     this.child.push(node);
+  }
+
+  setValue(value) {
+    this.value = value;
+  }
+
+  setType(type) {
+    this.type = type;
+  }
+
+  setPropKey(keyNode) {
+    if (!keyNode instanceof SyntaxTreeNode)
+      throw new Error(`Invalid node, ${keyNode}`);
+
+    this.propKey = keyNode;
+  }
+
+  setPropValue(valueNode) {
+    if (!valueNode instanceof SyntaxTreeNode)
+      throw new Error(`Invalid node, ${valueNode}`);
+
+    this.propValue = valueNode;
   }
 
   getType() {
@@ -27,6 +52,7 @@ export default class SyntaxTreeNode {
   }
 
   toString() {
+    // TODO: take care the case that 'this.value' is 'SyntaxTreeNode'
     const result = '{\n';
 
     for (const [prop, v] of Object.entries(this)) {
@@ -45,8 +71,4 @@ export default class SyntaxTreeNode {
     result += '},\n';
     return result;
   }
-}
-
-function toStringObjectProperty(node) {
-  
 }
