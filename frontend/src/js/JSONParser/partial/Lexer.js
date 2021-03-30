@@ -5,7 +5,7 @@ class Lexer {
             NULL: /null/,           // object type
             UNDEFINED: /undefined/, // object type
             BOOLEAN: /true|false/,
-            NUMBER: /(-?[0-9]+(?:\.[0-9]*)?)/,
+            NUMBER: /(-?[0-9]+(?:\.[0-9]+)?)/,
             STRING: /"(?:[^"\\]*|\\")*"/,
         }
     }

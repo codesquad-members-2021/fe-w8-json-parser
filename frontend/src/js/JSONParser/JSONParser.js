@@ -1,10 +1,7 @@
 import _ from '../util.js';
-import Tokenizer from './partial/Tokenizer.js';
-import Lexer from './partial/Lexer.js';
-import Parser from './partial/Parser.js';
 
 class JSONParser {
-    constructor(parserReference) {
+    constructor(parserReference, parserModule) {
         const {
             inputTextAreaSelector,
             resultTextAreaSelector,
@@ -13,6 +10,15 @@ class JSONParser {
         this.inputTextArea = _.$(inputTextAreaSelector);
         this.resultTextArea = _.$(resultTextAreaSelector);
         this.analysisBtn = _.$(analysisBtnSelector);
+
+        const {
+            tokenizer,
+            lexer,
+            parser,
+        } = parserModule;
+        this.tokenizer = tokenizer;
+        this.lexer = lexer;
+        this.parser = parser;
     }
 
     init = () => {
@@ -22,7 +28,25 @@ class JSONParser {
     setAnalysisBtnClickEvent = (analysisBtn) =>
         _.AE(analysisBtn, 'click', (e) => this.analysisBtnClickEventHandler(e));
     analysisBtnClickEventHandler = ({target}) => {
-        console.log(target)
+        let result = `{`;
+        const tempData = "[1]";
+        tempData.split('').forEach((char) => {
+        });
+
+
+
+        /*
+        {
+            "type": "array",
+            "child": [
+                {
+                    "value": 1,
+                    "type": "number"
+                },
+            ]
+        */
+
+
     };
 }
 
