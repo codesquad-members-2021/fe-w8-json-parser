@@ -7,26 +7,27 @@ class Tokenizer {
         };
         this.stack = [];
     };
-    getTokenType = (charData) => {
+    createToken = (jsonData) => {
         const { SEPARATOR, LITERAL } = this.tokenType;
-        let charDataTemp = charData;
+        let jsonDataTemp = jsonData;
 
-        while (charDataTemp.length > 0) {
-            if (charDataTemp[0] === " ") {
-                charDataTemp = charDataTemp.slice(1);
+        while (jsonDataTemp.length > 0) {
+            if (jsonDataTemp[0] === " ") {
+                jsonDataTemp = jsonDataTemp.slice(1);
                 continue;
             }
 
-            if (SEPARATOR.test(charDataTemp) && SEPARATOR.test(charDataTemp[0])) {
-                const currentStr = charDataTemp.match(SEPARATOR)[0];
-                charDataTemp = charDataTemp.replace(currentStr, '');
-                this.stack.push(currentStr);
-            } else {
-                const currentStr = charDataTemp.match(LITERAL)[0];
-                charDataTemp = charDataTemp.replace(currentStr, '');
-                this.stack.push(currentStr);
-            }
+            if (SEPARATOR.test(jsonDataTemp) && SEPARATOR.test(jsonDataTemp[0]))
+                jsonDataTemp = this.addTokenToStack(SEPARATOR, jsonDataTemp)
+            else
+                jsonDataTemp = this.addTokenToStack(LITERAL, jsonDataTemp);
         }
+    };
+
+    addTokenToStack = (tokenType, jsonData) => {
+        const currentStr = jsonData.match(tokenType)[0];
+        this.stack.push(currentStr);
+        return jsonData.replace(currentStr, '');
     };
 }
 

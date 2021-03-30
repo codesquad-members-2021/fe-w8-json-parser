@@ -24,8 +24,8 @@ class JSONParser {
     analysisBtnClickEventHandler = () => {
         const testData =
             '["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, "world"]},112],55, "99"],{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]';
-        this.tokenizer.getTokenType(testData);
-        console.log(this.tokenizer.stack);
+        this.tokenizer.createToken(testData);
+        // 임시
         this.resultTextArea.value = this.tokenizer.stack.join(' ');
     };
 }
