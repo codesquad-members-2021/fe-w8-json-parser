@@ -1,66 +1,30 @@
-import { DataType } from './const.js';
+import { Type } from './const.js';
 import Stack from './container/Stack.js';
 
 export function lexer(tokens) {
-  const stk = new Stack();
+  const resultTokens = [];
 
   tokens.forEach(token => {
-    const type = getDataType(token);
-    
+    const type = getType(token);
+    resultTokens.push({
+      type,
+      value: token
+    });
   });
+
+  return resultTokens;
 }
 
-export function getDataType(token) {
-  if (token === '[') return DataType.ARRAY;
-  if (token === '{') return DataType.OBJECT;
-  if (token[0] === '\"') return DataType.STRING;
-  if (token === 'true' || token === 'false') return DataType.BOOLEAN;
-  if (token === 'null') return DataType.OBJECT;
-  return DataType.NUMBER;
+export function getType(token) {
+  if (token === '[') return Type.LBRAKET;
+  if (token === ']') return Type.RBRAKET;
+  if (token === '{') return Type.LBRACE;
+  if (token === '}') return Type.RBRACE;
+  if (token === ':') return Type.COLON;
+  if (token[0] === '\"' && token[token.length - 1] === '\"') return Type.STRING;
+  if (token === 'true' || token === 'false') return Type.BOOLEAN;
+  if (token === 'null') return Type.NULL;
+  if (token !== '' && Number(token) !== NaN) return Type.NUMBER;
+
+  throw new Error(`Invalid argument, ${token}`);
 }
-
-/* test case
-
-1) 
-input: ['[', '\"a b c\"', 1.123, 34, '[', \"12345\", false, ']', null, true, ']']
-output: 
-{
-  "type": "array",
-  "child": [
-    {
-      "value": "\"a b c\"",
-      "type": "string",
-    },
-    {
-      "value": 1.123,
-      "type": "number",
-    },
-    {
-      "value": 34,
-      "type": "number"
-    },
-    {
-      "type": "array",
-      "child": [
-        {
-          "value": "\"12345\"",
-          "type": "string",
-        },
-        {
-          "value": false,
-          "type": "boolean",
-        }
-      ]
-    },
-    {
-      "value": null,
-      "type": "object",
-    },
-    {
-      "value": true,
-      "type": "boolean",
-    }
-  ]
-}
-
-*/
