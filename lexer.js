@@ -12,7 +12,7 @@ const isSeperator = (token) => {
   return seperator.includes(token);
 }
 
-const isNull = (token) => token === "null";
+const isNull = (token) => token === "null" || token === "NULL";
 
 const isBoolean = (token) => token === "true" || token === "false";
 
@@ -32,7 +32,7 @@ const getType = (token) => {
   if(isNumber(token)) return "number";
 }
 
-const makeObjTemplate = (token, type) => ({ type: type, value: token });
+const makeObjTemplate = (token, type) => ({ type, value: token });
 
 
 const test1 = `["a "," ",["c","d"],1,"]["]`
@@ -43,3 +43,5 @@ const test3 = '["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, 
 
 console.log(lex(tokenize(test1)))
 console.log(lex(tokenize(test3)))
+
+export { lex }
