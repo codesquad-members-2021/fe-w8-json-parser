@@ -1,9 +1,9 @@
 import JSONParser from "./JSONParser/JSONParser.js";
 
 const REFERENCE = {
-    allWrapperSelector: '.allWrapper',
-    dataBeforeChangeSelector: '.dataBeforeInput',
-    dataAfterChangeSelector: '.dataAfterTextArea',
+    inputTextAreaSelector: '.json-container__input',
+    resultTextAreaSelector: '.result-container__result__detail',
+    analysisBtnSelector: '.json-container__btn',
 };
 
-new JSONParser();
+new JSONParser(REFERENCE).init();
