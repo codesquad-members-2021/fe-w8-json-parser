@@ -45,6 +45,9 @@ function tokenizer(str) {
             // null 토큰화
             if (str[i] === 'n' && str[i+1] === 'u' && str[i+2] === 'l' && str[i+3] === 'l') tokens.push('null');
 
+            // : 토큰화
+            if (str[i] === ':') tokens.push(':');
+
 
             // 문자 토큰화
         } else {
