@@ -1,4 +1,4 @@
-import { tokenize } from './tokenizer.js';
+import * as v from "./variables.js"
 
 const lex = tokenArr => tokenArr.map((token) => makeObjTemplate(token, getType(token)))
 
@@ -8,11 +8,10 @@ const isString = (token) => {
 }
 
 const isSeperator = (token) => {
-  const seperator = ["[", "]", "{", "}", ",", ":"];
-  return seperator.includes(token);
+  return v.separator.includes(token);
 }
 
-const isNull = (token) => token === "null" || token === "NULL";
+const isNull = (token) => token === "null";
 
 const isBoolean = (token) => token === "true" || token === "false";
 
@@ -33,15 +32,5 @@ const getType = (token) => {
 }
 
 const makeObjTemplate = (token, type) => ({ type, value: token });
-
-
-const test1 = `["a "," ",["c","d"],1,"]["]`
-
-const test2 = `["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, "world"]},112],55, "99"]]`
-
-const test3 = '["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, "world"]},112],55, "99"],{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]'
-
-console.log(lex(tokenize(test1)))
-console.log(lex(tokenize(test3)))
 
 export { lex }
