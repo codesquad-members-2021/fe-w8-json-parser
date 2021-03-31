@@ -18,6 +18,9 @@ function childParse({ parentNode, tokens }) {
   while (!tokenQueue.empty()) {
     const currToken = tokenQueue.pop();
 
+    if (currToken.type === Type.RBRAKET || currToken.type === Type.RBRACE)
+      throw new Error(`Invalid syntax, unmatched ${currToken.value}`);
+
     if (parentNode.getType() === Type.OBJECT) {
       const propKeyToken = currToken;
 
@@ -73,7 +76,7 @@ function childParse({ parentNode, tokens }) {
       parentNode.appendChild(newNode);
     } else if (currToken.type === Type.COLON) {
       throw new Error(`Invalid syntax, invalid ':'`);
-    } else if (currToken.type === Type.STRING || currToken.type === Type.BOOLEAN || currToken.type === Type.NUMBER) {
+    } else if (currToken.type === Type.STRING || currToken.type === Type.BOOLEAN || currToken.type === Type.NUMBER || currToken.type === Type.NULL) {
       const newNode = new SyntaxTreeNode({ type: currToken.type, value : currToken.value });
       parentNode.appendChild(newNode);
     } else {
@@ -112,8 +115,4 @@ export function getPartialTokens({ rightType, tokenQueue }) {
   }
 
   return result;
-}
-
-function isSeperator(token) {
-  return token.type === Type.RBRACE || token.type === Type.LBRACE || token.type === Type.RBRAKET || token.type === Type.LBRAKET;
 }
