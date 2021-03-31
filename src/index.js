@@ -1,6 +1,7 @@
-const tokenize = require('./util/tokenizer.js');
-const lexicalize = require('./util/lexer.js');
-const generate = require('./util/treeGenerator.js');
+const tokenize = require('./util/tokenizer/tokenizer.js');
+const lexicalize = require('./util/lexer/lexer.js');
+const generate = require('./util/parseTreeGenerator/generator.js');
+const parsing = require('./util/parser/parser.js');
 
 const data = `
 [
@@ -13,26 +14,13 @@ const data = `
   true  
 ]
 `;
-const splitData = data.replace(/(\r\n\t|\n|\r\t)|\s/g, "");
 
+const splitData = data.replace(/(\r\n\t|\n|\r\t)|\s/g, "");
 const tokenArray = tokenize(splitData);
 const lexicalizedTokens = lexicalize(tokenArray);
-
 const lexicalizedTree = generate(lexicalizedTokens);
 
+const rootBranch = lexicalizedTree.getRoot().getLeafNodes()[0];
+const parsedResult = parsing(rootBranch.getLeafNodes())
 
-
-const parsing = (me) => {
-
-  if (me.type === "Separator" && me.data === "[") {}
-
-  if (me.constructor.name === "Branch") {
-    me.getLeafNodes().forEach((node) => {
-      parsing(node)
-    })
-  } else {
-    console.log(me);
-    return me;
-  }
-}
-parsing(lexicalizedTree.getRoot());
+console.log(JSON.stringify(parsedResult, null, "\t"));
