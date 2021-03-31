@@ -55,12 +55,9 @@ function tokenizer(str) {
         }
     }
 
-    console.log(tokens.stack);
     return tokens.stack;
 }
 
-const a = '["1 2 3", 23, true, null, {3.214}, {"key":false} "234ho"]';
-tokenizer(a);
 
 export default tokenizer;
 

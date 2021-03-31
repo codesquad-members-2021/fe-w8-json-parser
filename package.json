@@ -1,37 +1,43 @@
 {
-  "name": "fe-w8-json-parser",
-  "version": "1.0.0",
-  "description": "",
   "type": "module",
-  "main": "webpack.config.js",
+  "name": "vendingmachine",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "build": "webpack --watch --mode development",
-    "prod": "webpack --mode production",
-    "start": "webpack-dev-server --mode development --open"
+    "watch:webpack": "npx webpack",
+    "server:start": "nodemon ./bin/www",
+    "start": "node tools/start"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cchoongh/fe-w8-json-parser.git"
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "concurrently": "^6.0.0",
+    "cookie-parser": "~1.4.4",
+    "core-js": "^3.9.1",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "rxjs": "^6.6.6",
+    "rxjs-compat": "^6.6.6",
+    "sass": "^1.32.8",
+    "spawn-command": "^0.0.2-1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/cchoongh/fe-w8-json-parser/issues"
-  },
-  "homepage": "https://github.com/cchoongh/fe-w8-json-parser#readme",
   "devDependencies": {
     "@babel/cli": "^7.13.10",
     "@babel/core": "^7.13.10",
-    "@babel/polyfill": "^7.12.1",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-transform-property-mutators": "^7.12.13",
     "@babel/preset-env": "^7.13.10",
     "babel-loader": "^8.2.2",
-    "css-loader": "^5.0.2",
-    "sass": "^1.32.8",
-    "sass-loader": "^10.0.1",
+    "css": "^3.0.0",
+    "css-loader": "^5.2.0",
+    "html-webpack-plugin": "^5.3.1",
+    "loader": "^2.1.1",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^11.0.1",
     "style-loader": "^2.0.0",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack": "^5.27.1",
+    "webpack-cli": "^4.6.0"
   }
 }
