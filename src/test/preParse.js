@@ -1,4 +1,4 @@
-import tokenizer from '../Tokenizer.js';
+import tokenizer from '../tokenizer.js';
 import {lexer} from '../lexer.js';
 import Stack from '../container/Stack.js';
 
