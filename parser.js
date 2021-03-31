@@ -1,51 +1,62 @@
-import { tokenize } from './tokenizer.js';
-import { lex } from './lexer.js';
-
-const makeTemplate = (type, value) => {
-  return `
-    {
-      "value": ${value},
-      "type": ${type},
-    }
-  `
+const parse = (lexedArr, parentNode = {child:[]}, isObject = false, ObjIndex = 0) => {
+  if(!lexedArr.length) return parentNode
+  const currentNode = lexedArr.shift()
+  const {type, value} = currentNode
+  switch(type) {
+    case 'string':
+    case 'number':
+    case 'undefinded':
+    case 'boolean':
+    case 'null':
+      if (isObject === "propKey") parentNode.child[ObjIndex].value.propKey = currentNode
+      else if (isObject === "propValue") parentNode.child[ObjIndex].value.propValue = currentNode
+      else parentNode.child.push(currentNode)
+    case 'seperator':
+      switch (value) {
+        case "[":
+          parentNode.child.push(parse(lexedArr, makeOpenBracketTemplate()))
+        case "{":
+          parentNode.child.push(parse(lexedArr, makeOpenBraceTemplate(), "propKey"))
+        case "]":
+        case "}":
+          return parentNode
+        case ":":
+          return parse(lexedArr, parentNode, "propValue", ObjIndex)
+        case ",":
+          if(isObject === "propValue") {
+            parentNode.child.push({
+              "value": {
+                "propKey": {},
+                "propValue": {}
+              },
+              "type": "objectProperty"
+            })
+            return parse(lexedArr, parentNode, "propKey", ++ObjIndex)
+          }
+      }
+  }
+  return parse(lexedArr, parentNode, isObject, ObjIndex)
 }
 
-const makeSeparatorTemplate = (value) => {
-  switch(value) {
-    case '[':
-      return makeOpenBracketTemplate();
-
-    case ']':
-      return makeCloseBracketTemplate();
-
-    case '{':
-      return makeOpenBraceTemplate();
-
-    case '}':
-      return makeCloseBraceTemplate();
-
-    case ':':
-      return makeColonTemplate();
-
-    case ',':
-      return ','
+const makeOpenBracketTemplate = () => {
+  return {
+    type: "array",
+    child: [],
+    value: "arrayObject"
   }
 }
 
-const parse = (lexedArr) => {
-  return lexedArr.reduce((acc, {type, value}) => {
-    switch(type) {
-      case 'string':
-      case 'number':
-      case 'undefinded':
-      case 'boolean':
-        return acc + makeTemplate(type, value);
-
-      case 'null':
-        return acc + makeTemplate("object", value);
-      
-      case 'seperator':
-        return acc + makeSeparatorTemplate(value);
-    }
-  }, '');
+const makeOpenBraceTemplate = () => {
+  return {
+    "type": "object",
+    "child": [{
+      "value": {
+        "propKey": {},
+        "propValue": {}
+      },
+      "type": "objectProperty"
+    }]
+  }
 }
+
+export { parse }
