@@ -2,10 +2,11 @@ import '../scss/main.scss';
 import tokenizer from './tokenizer.js';
 import {lexer} from './lexer.js';
 import {parse} from './parser.js';
+import {_} from './utils/selctor.js';
 
 function analysis() {
-  const inputData = document.querySelector('.left__data');
-  const result = document.querySelector(".right__result");
+  const inputData = _.$('.left__data');
+  const result = _.$(".right__result");
   const data = inputData.value;
   const tokens = tokenizer(data);
   const lexerTokens = lexer(tokens);
@@ -14,8 +15,7 @@ function analysis() {
 } 
 
 function load() {  
-  const submitBtn = document.querySelector('.left__btn');
+  const submitBtn = _.$('.left__btn');
   submitBtn.addEventListener('click', analysis);
 }
-
-window.addEventListener('DOMContentLoaded', load);
+_.on(window, 'DOMContentLoaded', load);
