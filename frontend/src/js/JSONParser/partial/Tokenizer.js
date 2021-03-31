@@ -2,31 +2,40 @@
 class Tokenizer {
     constructor() {
         this.tokenType = {
-            SEPARATOR: /\{|\}|\[|\]|\,|:|\s/,
-            LITERAL: /null|undefined|(true|false)|(-?[0-9]+(?:\.[0-9]+)?)|("(?:[^"\\]*|\\")*")/,
+            SEPARATOR: /{|}|\[|\]|,|:|\s/,
+            LITERAL: /null|(true|false)|(-?[0-9]+(?:\.[0-9]+)?)|("(?:[^"\\]*|\\")*")/,
         };
-        this.stack = [];
     };
-    getTokenType = (charData) => {
-        const { SEPARATOR, LITERAL } = this.tokenType;
-        let charDataTemp = charData;
 
-        while (charDataTemp.length > 0) {
-            if (charDataTemp[0] === " ") {
-                charDataTemp = charDataTemp.slice(1);
+    createTokens = (strInputData) => {
+        const { SEPARATOR, LITERAL } = this.tokenType;
+        const arrToken = [];
+
+        while (strInputData.length > 0) {
+            if (strInputData[0] === " ") {
+                strInputData = strInputData.slice(1);
                 continue;
             }
 
-            if (SEPARATOR.test(charDataTemp) && SEPARATOR.test(charDataTemp[0])) {
-                const currentStr = charDataTemp.match(SEPARATOR)[0];
-                charDataTemp = charDataTemp.replace(currentStr, '');
-                this.stack.push(currentStr);
-            } else {
-                const currentStr = charDataTemp.match(LITERAL)[0];
-                charDataTemp = charDataTemp.replace(currentStr, '');
-                this.stack.push(currentStr);
-            }
+            if (SEPARATOR.test(strInputData) && SEPARATOR.test(strInputData[0]))
+                strInputData = this.addTokenToStack(arrToken, SEPARATOR, strInputData)
+            else
+                strInputData = this.addTokenToStack(arrToken, LITERAL, strInputData);
         }
+
+        return arrToken;
+    };
+
+    /**
+     * @param {Array} arrToken 
+     * @param {String} tokenType 
+     * @param {String} inputData 
+     * @returns 
+     */
+    addTokenToStack = (arrToken, tokenType, inputData) => {
+        const currentStr = inputData.match(tokenType)[0];
+        arrToken.push(currentStr);
+        return inputData.replace(currentStr, '');
     };
 }
 
