@@ -18,15 +18,19 @@ class Lexer {
     }
 
     /**
+     *
      * @param {Array} tokens
+     * @returns
      */
     createLexerTokens = (tokens) => {
         const lexerTokens = [];
-
         let idx = 0;
         while (tokens.length > 0) {
             const item = tokens.shift();
             const type = this.createTokenType(item);
+
+            if (type === 'comma') continue;
+
             const lexerTokenParams = {
                 key: idx,
                 type,
@@ -43,10 +47,10 @@ class Lexer {
     createTokenType = (tokenItem) => {
         let resultType = '';
 
-        if (this.isNull(tokenItem)) resultType = 'object';
+        if (this.isNull(tokenItem)) resultType = 'null';    // Parse에서 type: Object
         else if (this.isBoolean(tokenItem)) resultType = 'boolean';
-        else if (this.isNumber(tokenItem)) resultType = 'number';
         else if (this.isString(tokenItem)) resultType = 'string';
+        else if (this.isNumber(tokenItem)) resultType = 'number';
         else if (this.isArrayOpen(tokenItem)) resultType = 'arrayOpen';
         else if (this.isArrayClose(tokenItem)) resultType = 'arrayClose';
         else if (this.isObjectOpen(tokenItem)) resultType = 'objectOpen';
@@ -58,42 +62,16 @@ class Lexer {
         return resultType;
     };
 
-    isNull = (tokenItem) => {
-        return this.lexerType.NULL.test(tokenItem);
-    };
-
-    isBoolean = (tokenItem) => {
-        return this.lexerType.BOOLEAN.test(tokenItem);
-    };
-
-    isNumber = (tokenItem) => {
-        return this.lexerType.NUMBER.test(tokenItem);
-    };
-
-    isString = (tokenItem) => {
-        return this.lexerType.STRING.test(tokenItem);
-    };
-    isArrayOpen = (tokenItem) => {
-        return this.lexerType.ARRAYOPEN.test(tokenItem);
-    };
-
-    isArrayClose = (tokenItem) => {
-        return this.lexerType.ARRAYCLOSE.test(tokenItem);
-    };
-
-    isObjectOpen = (tokenItem) => {
-        return this.lexerType.OBJECTOPEN.test(tokenItem);
-    };
-    isObjectClose = (tokenItem) => {
-        return this.lexerType.OBJECTCLOSE.test(tokenItem);
-    };
-    isComma = (tokenItem) => {
-        return this.lexerType.COMMA.test(tokenItem);
-    };
-
-    isColon = (tokenItem) => {
-        return this.lexerType.COLON.test(tokenItem);
-    };
+    isNull = (tokenItem) => this.lexerType.NULL.test(tokenItem);
+    isBoolean = (tokenItem) => this.lexerType.BOOLEAN.test(tokenItem);
+    isNumber = (tokenItem) => this.lexerType.NUMBER.test(tokenItem);
+    isString = (tokenItem) => this.lexerType.STRING.test(tokenItem);
+    isArrayOpen = (tokenItem) => this.lexerType.ARRAYOPEN.test(tokenItem);
+    isArrayClose = (tokenItem) => this.lexerType.ARRAYCLOSE.test(tokenItem);
+    isObjectOpen = (tokenItem) => this.lexerType.OBJECTOPEN.test(tokenItem);
+    isObjectClose = (tokenItem) => this.lexerType.OBJECTCLOSE.test(tokenItem);
+    isComma = (tokenItem) => this.lexerType.COMMA.test(tokenItem);
+    isColon = (tokenItem) => this.lexerType.COLON.test(tokenItem);
 }
 
 export default Lexer;

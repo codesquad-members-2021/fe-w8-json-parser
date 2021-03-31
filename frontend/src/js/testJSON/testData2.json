@@ -1,0 +1,7 @@
+{
+    "type": "array",
+    "child": [
+        { "type": "number", "value": 12 },
+        { "type": "array", "child": [{ "type": "number", "value": 2 }] }
+    ]
+}
