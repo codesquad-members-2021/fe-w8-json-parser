@@ -31,7 +31,7 @@ function tokenizer(str) {
                 curNum += str[i];
             } else if (curNum) {
                 numFlag = false;
-                tokens.push(curNum);
+                tokens.push(Number(curNum));
                 curNum = '';
             }
 
@@ -39,14 +39,12 @@ function tokenizer(str) {
             if (str[i].match(bracketRegex)) tokens.push(str[i]);
 
             // boolean 토큰화
-            if (str[i] === 't' && str[i+1] === 'r' && str[i+2] === 'u' && str[i+3] === 'e') tokens.push('true');
-            if (str[i] === 'f' && str[i+1] === 'a' && str[i+2] === 'l' && str[i+3] === 's' && str[i+4] === 'e') tokens.push('false');
+            if (str[i] === 't' && str[i+1] === 'r' && str[i+2] === 'u' && str[i+3] === 'e') tokens.push(true);
+            if (str[i] === 'f' && str[i+1] === 'a' && str[i+2] === 'l' && str[i+3] === 's' && str[i+4] === 'e') tokens.push(false);
 
             // null 토큰화
-            if (str[i] === 'n' && str[i+1] === 'u' && str[i+2] === 'l' && str[i+3] === 'l') tokens.push('null');
+            if (str[i] === 'n' && str[i+1] === 'u' && str[i+2] === 'l' && str[i+3] === 'l') tokens.push(null);
 
-            // 콜론 토큰화
-            if (str[i] === ':') tokens.push(':');
 
             // 문자 토큰화
         } else {
@@ -54,8 +52,12 @@ function tokenizer(str) {
         }
     }
 
+    console.log(tokens.stack);
     return tokens.stack;
 }
+
+const a = '["1 2 3", 23, true, null, {3.214}, {"key":false} "234ho"]';
+tokenizer(a);
 
 export default tokenizer;
 
