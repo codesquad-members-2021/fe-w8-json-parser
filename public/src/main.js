@@ -6,12 +6,14 @@ import {_} from './utils/selctor.js';
 
 function analysis() {
   const inputData = _.$('.left__data');
-  const result = _.$(".right__result");
+  const print = _.$(".right__result");
   const data = inputData.value;
   const tokens = tokenizer(data);
   const lexerTokens = lexer(tokens);
   const syntaxTree = parse(lexerTokens);
-  result.innerText = 'syntaxTree:' + JSON.stringify(syntaxTree, null, '  ');
+  const result = 'syntaxTree:' + JSON.stringify(syntaxTree, null, '  ');
+  print.innerText = result;
+  console.log(result);
 } 
 
 function load() {  

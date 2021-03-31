@@ -16,6 +16,11 @@
     height: 300px;
     overflow: scroll;
   }
+
+  &__btn {
+    margin-top: 10px;
+    background-color: rgb(211, 157, 112);
+  }
 }
 
 
@@ -27,11 +32,12 @@
     border:1px solid gray;
     width: 350px;
     height: 350px;
-    overflow: scroll;
+    overflow: auto;
   }
 }
 
 
 .arrow {
   font-size: 100px;
+  align-self: center;
 }
