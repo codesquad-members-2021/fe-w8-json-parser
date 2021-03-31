@@ -2,32 +2,40 @@
 class Tokenizer {
     constructor() {
         this.tokenType = {
-            SEPARATOR: /\{|\}|\[|\]|\,|:|\s/,
-            LITERAL: /null|undefined|(true|false)|(-?[0-9]+(?:\.[0-9]+)?)|("(?:[^"\\]*|\\")*")/,
+            SEPARATOR: /{|}|\[|\]|,|:|\s/,
+            LITERAL: /null|(true|false)|(-?[0-9]+(?:\.[0-9]+)?)|("(?:[^"\\]*|\\")*")/,
         };
-        this.stack = [];
     };
-    createToken = (jsonData) => {
-        const { SEPARATOR, LITERAL } = this.tokenType;
-        let jsonDataTemp = jsonData;
 
-        while (jsonDataTemp.length > 0) {
-            if (jsonDataTemp[0] === " ") {
-                jsonDataTemp = jsonDataTemp.slice(1);
+    createTokens = (strInputData) => {
+        const { SEPARATOR, LITERAL } = this.tokenType;
+        const arrToken = [];
+
+        while (strInputData.length > 0) {
+            if (strInputData[0] === " ") {
+                strInputData = strInputData.slice(1);
                 continue;
             }
 
-            if (SEPARATOR.test(jsonDataTemp) && SEPARATOR.test(jsonDataTemp[0]))
-                jsonDataTemp = this.addTokenToStack(SEPARATOR, jsonDataTemp)
+            if (SEPARATOR.test(strInputData) && SEPARATOR.test(strInputData[0]))
+                strInputData = this.addTokenToStack(arrToken, SEPARATOR, strInputData)
             else
-                jsonDataTemp = this.addTokenToStack(LITERAL, jsonDataTemp);
+                strInputData = this.addTokenToStack(arrToken, LITERAL, strInputData);
         }
+
+        return arrToken;
     };
 
-    addTokenToStack = (tokenType, jsonData) => {
-        const currentStr = jsonData.match(tokenType)[0];
-        this.stack.push(currentStr);
-        return jsonData.replace(currentStr, '');
+    /**
+     * @param {Array} arrToken 
+     * @param {String} tokenType 
+     * @param {String} inputData 
+     * @returns 
+     */
+    addTokenToStack = (arrToken, tokenType, inputData) => {
+        const currentStr = inputData.match(tokenType)[0];
+        arrToken.push(currentStr);
+        return inputData.replace(currentStr, '');
     };
 }
 

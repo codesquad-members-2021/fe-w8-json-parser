@@ -10,6 +10,7 @@ class JSONParser {
         this.inputTextArea = _.$(inputTextAreaSelector);
         this.resultTextArea = _.$(resultTextAreaSelector);
         this.analysisBtn = _.$(analysisBtnSelector);
+
         this.tokenizer = tokenizer;
         this.lexer = lexer;
         this.parser = parser;
@@ -24,9 +25,13 @@ class JSONParser {
     analysisBtnClickEventHandler = () => {
         const testData =
             '["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, "world"]},112],55, "99"],{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]';
-        this.tokenizer.createToken(testData);
-        // 임시
-        this.resultTextArea.value = this.tokenizer.stack.join(' ');
+
+        const tokens = this.tokenizer.createTokens(testData);
+        // console.log(tokens)
+        const lexerTokens = this.lexer.createLexerTokens(tokens);
+
+        console.log(lexerTokens);
+        // const parseTree = parser(lexerTokens);
     };
 }
 
