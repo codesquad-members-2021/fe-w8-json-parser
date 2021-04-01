@@ -15,38 +15,38 @@ export function parse(tokens) {
 function childParse({ parentNode, tokens }) {
   const tokenQueue = new Queue({ initialData: tokens });
 
-  while (!tokenQueue.empty()) {
-    const currToken = tokenQueue.pop();
+  while (!tokenQueue.empty()) { // shift tokenQueue until it's empty
+    const currToken = tokenQueue.shift();
 
     if (currToken.type === Type.RBRAKET || currToken.type === Type.RBRACE)
       throw new Error(`Invalid syntax, unmatched ${currToken.value}`);
 
-    if (parentNode.getType() === Type.OBJECT) {
+    if (parentNode.getType() === Type.OBJECT) { // if parent node is object
       const propKeyToken = currToken;
 
-      if (propKeyToken.type !== Type.STRING)
+      if (propKeyToken.type !== Type.STRING)  // key is should be "key"
         throw new Error('A key in object is not string type!');
 
-      if (tokenQueue.pop().type !== Type.COLON)
+      if (tokenQueue.shift().type !== Type.COLON) // next of "key" is shold be :
         throw new Error(`Invalid syntax, ':' is not exist!`);
 
       const objPropNode = new SyntaxTreeNode({ type: Type.OBJECT_PROPERTY });
       const valueNode = new SyntaxTreeNode({ propKey: new SyntaxTreeNode(propKeyToken) });
-      const propValueToken = tokenQueue.pop();
+      const propValueToken = tokenQueue.shift();
 
       if (propValueToken.type === Type.STRING || propValueToken.type === Type.BOOLEAN || propValueToken.type === Type.NUMBER) {
         const propValueNode = new SyntaxTreeNode(propValueToken);
         valueNode.setPropValue(propValueNode);
-      } else if (propValueToken.type === Type.LBRAKET) {
+      } else if (propValueToken.type === Type.LBRAKET) {    // if value token is array
         const propValueNode = new SyntaxTreeNode({ type: Type.ARRAY, value: 'arrayObject' });
-        childParse({
+        childParse({    // recursion this function with array type
           parentNode: propValueNode,
           tokens: getPartialTokens({ rightType: Type.RBRAKET, tokenQueue })
         });
         valueNode.setPropValue(propValueNode);
-      } else if (propValueToken.type === Type.LBRACE) {
+      } else if (propValueToken.type === Type.LBRACE) {   // if value token is object
         const propValueNode = new SyntaxTreeNode({ type: Type.OBJECT });
-        childParse({
+        childParse({  // recursion this function with object type
           parentNode: propValueNode,
           tokens: getPartialTokens({ rightType: Type.RBRACE, tokenQueue })
         });
@@ -57,10 +57,10 @@ function childParse({ parentNode, tokens }) {
 
       objPropNode.setValue(valueNode);
       parentNode.appendChild(objPropNode);
-      continue;
+      continue;   // object case of parent node is end
     }
 
-    if (currToken.type === Type.LBRAKET) {
+    if (currToken.type === Type.LBRAKET) {    // if token is [
       const newNode = new SyntaxTreeNode({ type: Type.ARRAY, value: 'arrayObject' });
       childParse({
         parentNode: newNode,
@@ -98,7 +98,7 @@ export function getPartialTokens({ rightType, tokenQueue }) {
     throw new Error(`Invalid argument, ${rightType}`);
 
   while (!tokenQueue.empty()) {
-    const token = tokenQueue.pop();
+    const token = tokenQueue.shift();
 
     if (token.type === leftType)
       leftTypeCnt++;

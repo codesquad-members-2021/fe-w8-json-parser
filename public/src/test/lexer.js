@@ -15,4 +15,4 @@ function test_lexer() {
 }
 
 // test_getDataType();
-// test_lexer();
+test_lexer();

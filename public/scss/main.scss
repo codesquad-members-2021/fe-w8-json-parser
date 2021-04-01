@@ -14,6 +14,8 @@
   
   &__data {
     height: 300px;
+    width:auto;
+    word-break: break-all;
     overflow: scroll;
   }
 
@@ -30,6 +32,7 @@
 
   &__result {
     border:1px solid gray;
+    white-space: pre-wrap;
     width: 350px;
     height: 350px;
     overflow: auto;

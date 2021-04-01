@@ -7,7 +7,7 @@ export default class Queue {
     this.queue.push(e);
   }
 
-  pop() {
+  shift() {
     return this.queue.shift();
   }
 
