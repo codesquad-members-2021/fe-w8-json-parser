@@ -24,7 +24,7 @@ class Lexer {
      */
     createLexerTokens = (tokens) => {
         const lexerTokens = [];
-        let idx = 0;
+
         while (tokens.length > 0) {
             const item = tokens.shift();
             const type = this.createTokenType(item);
@@ -32,13 +32,11 @@ class Lexer {
             if (type === 'comma') continue;
 
             const lexerTokenParams = {
-                key: idx,
                 type,
                 value: item,
             };
             const lexerToken = new LexerToken(lexerTokenParams);
             lexerTokens.push(lexerToken);
-            idx++;
         }
 
         return lexerTokens;

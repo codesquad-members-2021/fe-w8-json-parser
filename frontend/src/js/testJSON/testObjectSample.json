@@ -1,0 +1,45 @@
+{
+    "type": "object",
+    "child": [
+        {
+            "value": {
+                "propKey": {
+                    "value": "\"easy\"",
+                    "type": "string"
+                },
+                "propValue": {
+                    "type": "array",
+                    "child": [
+                        {
+                            "value": "\"hello\"",
+                            "type": "string"
+                        },
+                        {
+                            "type": "object",
+                            "child": [
+                                {
+                                    "value": {
+                                        "propKey": {
+                                            "value": "\"a\"",
+                                            "type": "string"
+                                        },
+                                        "propValue": {
+                                            "value": "\"a\"",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "objectProperty"
+                                }
+                            ]
+                        },
+                        {
+                            "value": "\"world\"",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "type": "objectProperty"
+        }
+    ]
+}

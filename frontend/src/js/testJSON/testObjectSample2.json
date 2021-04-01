@@ -1,0 +1,18 @@
+{
+    "type": "object",
+    "child": [
+        {
+            "value": {
+                "propKey": {
+                    "value": "\"a\"",
+                    "type": "string"
+                },
+                "propValue": {
+                    "value": "\"a\"",
+                    "type": "string"
+                }
+            },
+            "type": "objectProperty"
+        }
+    ]
+}

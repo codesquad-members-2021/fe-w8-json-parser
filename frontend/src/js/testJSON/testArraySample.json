@@ -1,0 +1,10 @@
+{
+    "type": "array",
+    "child": [
+        {
+            "value": "\"1a3\"",
+            "type": "string"
+        }
+    ],
+    "value": "arrayObject"
+}
