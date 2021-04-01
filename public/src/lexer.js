@@ -2,7 +2,6 @@ export default class Lexer {
   constructor(tokenList) {
     this.tokenList = tokenList;
     this.lexerList = [];
-    this.getLexerList();
   }
 
   getLexerList() {

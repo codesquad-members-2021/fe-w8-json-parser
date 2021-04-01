@@ -1,6 +1,7 @@
 import '../scss/style.scss';
 import MainView from '../view/view';
 import Lexer from './lexer';
+import Parser from './parser';
 import Tokenizer from './tokenizer';
 
 // const inputData =
@@ -11,5 +12,4 @@ const inputData = '[1, 2, null, 3, "raccoon", [4, [ 5, true, 6], 7], 8, "luke"]'
 const mainView = new MainView();
 const tokenizer = new Tokenizer(inputData);
 const lexer = new Lexer(tokenizer.getTokenList());
-
-console.log(lexer.lexerList);
+const parse = new Parser(lexer.getLexerList());
