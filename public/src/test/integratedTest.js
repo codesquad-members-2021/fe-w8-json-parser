@@ -1,4 +1,4 @@
-import tokenizer from '../Tokenizer.js'
+import tokenizer from '../tokenizer.js'
 import { lexer } from '../lexer.js';
 import { parse } from '../parser.js';
 
@@ -18,4 +18,5 @@ tcs.forEach((tc, idx) => {
   console.log('lexerTokens:', lexerTokens);
   const syntaxTree = parse(lexerTokens);
   console.log('syntaxTree:', JSON.stringify(syntaxTree, null, '  '));
+  console.log(syntaxTree.toString());
 });
