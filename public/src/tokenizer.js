@@ -31,7 +31,6 @@ export default class Tokenizer {
     const tokenList = this.tokenArr.map((el) => el.trim());
     const realTokenList = tokenList.filter((el) => el !== '' && el !== ',');
     this.tokenArr = realTokenList;
-    console.log(realTokenList);
     return this.tokenArr;
   }
   pushToken(data) {

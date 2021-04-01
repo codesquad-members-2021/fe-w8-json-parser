@@ -1,5 +1,8 @@
 import { _ } from '../src/util.js';
 import { inputTitle, buttonName, outputTitle } from '../src/const.js';
+import Tokenizer from '../src/tokenizer.js';
+import Lexer from '../src/lexer.js';
+import Parser from '../src/parser.js';
 export default class MainView {
   constructor() {
     this.init();
@@ -12,6 +15,21 @@ export default class MainView {
         ${this.getOutputContainer()}
         `);
   }
+  addEvent() {
+    this.clickParsingButton();
+  }
+  clickParsingButton() {
+    const $parsingBtn = _.$('#parsing-btn');
+    $parsingBtn.addEventListener('click', this.submitData);
+  }
+  submitData() {
+    const $inputData = _.$('#input-data');
+    const tokenizer = new Tokenizer($inputData.value);
+    const lexer = new Lexer(tokenizer.getTokenList());
+    const parse = new Parser(lexer.getLexerList());
+    const $outputData = _.$('#output-data');
+    $outputData.value = JSON.stringify(parse.parse());
+  }
   getInputTitle(title) {
     return `
         <div class="input-container__title">${title}</div>
@@ -20,14 +38,14 @@ export default class MainView {
   getInputBox() {
     return `
         <div class="input-container__box">
-        <input type="text" />
+        <input type="text" id="input-data" />
         </div>
         `;
   }
   getInputBtn(buttonName) {
     return `
         <div class="input-container__btn">
-        <button>${buttonName}</button>
+        <button id="parsing-btn">${buttonName}</button>
         </div>
         `;
   }
@@ -57,7 +75,7 @@ export default class MainView {
   getOutputBox() {
     return `
         <div class="output-container__box">
-        <input type="text" />
+        <input id="output-data" type="text" />
         </div>
         `;
   }
