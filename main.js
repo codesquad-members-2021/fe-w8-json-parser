@@ -1,15 +1,12 @@
 import { tokenize } from './tokenizer.js';
 import { lex } from './lexer.js';
 import { parse } from './parser.js';
+import * as _ from './util.js';
 
-const test1 = `["a "," ",["c","d"],1,"]["]`
+const $inputText = _.$('.input__text');
+const $inputBtn = _.$('.input__btn');
+const $jsonTree = _.$('.json-tree');
 
-const test2 = `["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, "world"]},112],55, "99"]]`
-
-const test3 = '["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, "world"]},112],55, "99"],{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]'
-
-const test4 = '["1a3",{"easy" : ["hello", {"a":"a"}, "world"]},55, "99",{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]'
-
-// console.log(lex(tokenize(test4)))
-const please = parse(lex(tokenize(test4)))
-console.log(JSON.stringify(please, null, '  '))
+$inputBtn.addEventListener('click', () => {
+  $jsonTree.innerHTML = `<pre>${JSON.stringify(_.pipe(tokenize, lex, parse)($inputText.value), null, '  ')}</pre>`;
+})
