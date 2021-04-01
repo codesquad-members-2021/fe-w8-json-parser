@@ -7,7 +7,7 @@ const isString = (token) => {
   return strRegex.test(token);
 }
 
-const isSeperator = (token) => {
+const isSeparator = (token) => {
   return v.separator.includes(token);
 }
 
@@ -24,7 +24,7 @@ const isNumber = (token) => {
 
 const getType = (token) => {
   if(isString(token)) return "string";
-  if(isSeperator(token)) return "seperator";
+  if(isSeparator(token)) return "separator";
   if(isNull(token)) return "null";
   if(isBoolean(token)) return "boolean";
   if(isUndefined(token)) return "undefined";

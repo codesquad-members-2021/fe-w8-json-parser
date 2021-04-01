@@ -1,19 +1,12 @@
 const parse = (lexedArr, parentNode = {child:[]}, isObject = false, ObjIndex = 0) => {
   if(!lexedArr.length) return parentNode
-  const currentNode = lexedArr.shift()
-  const {type, value} = currentNode
+  const {type, value} = lexedArr.shift()
   switch(type) {
-    case 'string':
-    case 'number':
-    case 'undefinded':
-    case 'boolean':
-    case 'null':
-      foo(currentNode, isObject, parentNode, ObjIndex)
-    case 'seperator':
+    case 'separator':
       if(value === "[")
-        foo(parse(lexedArr, makeOpenBracketTemplate()), isObject, parentNode, ObjIndex)
+        addNode(parse(lexedArr, makeArrayTemplate()), parentNode, isObject, ObjIndex)
       if(value === "{")
-        foo(parse(lexedArr, makeOpenBraceTemplate(), "propKey"), isObject, parentNode, ObjIndex)
+        addNode(parse(lexedArr, makeObjectTemplate(), "propKey"), parentNode, isObject, ObjIndex)
       if(value === "]" || value === "}")
         return parentNode
       if(value === ":")
@@ -29,17 +22,20 @@ const parse = (lexedArr, parentNode = {child:[]}, isObject = false, ObjIndex = 0
           })
           return parse(lexedArr, parentNode, "propKey", ++ObjIndex)
         }
+      break;
+    default :
+      addNode({type, value}, parentNode, isObject, ObjIndex)
   }
   return parse(lexedArr, parentNode, isObject, ObjIndex)
 }
 
-const foo = (currentNode ,isObject, parentNode, ObjIndex) => {
-  if (isObject === "propKey") parentNode.child[ObjIndex].value.propKey = currentNode
-  else if (isObject === "propValue") parentNode.child[ObjIndex].value.propValue = currentNode
-  else parentNode.child.push(currentNode)
+const addNode = (node, parentNode, isObject, ObjIndex) => {
+  if (isObject === "propKey") parentNode.child[ObjIndex].value.propKey = node
+  else if (isObject === "propValue") parentNode.child[ObjIndex].value.propValue = node
+  else parentNode.child.push(node)
 }
 
-const makeOpenBracketTemplate = () => {
+const makeArrayTemplate = () => {
   return {
     type: "array",
     child: [],
@@ -47,7 +43,7 @@ const makeOpenBracketTemplate = () => {
   }
 }
 
-const makeOpenBraceTemplate = () => {
+const makeObjectTemplate = () => {
   return {
     "type": "object",
     "child": [{
