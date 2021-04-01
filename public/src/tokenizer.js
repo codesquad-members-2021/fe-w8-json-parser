@@ -5,6 +5,11 @@ export default class Tokenizer {
     this.stack = [];
     this.getToken();
   }
+
+  getTokenList() {
+    return this.tokenArr;
+  }
+
   getToken() {
     for (let i = 0; i < this.inputData.length; i++) {
       if (this.isQuote(this.inputData[i]) && !this.isFullSatck()) {
@@ -25,8 +30,9 @@ export default class Tokenizer {
     }
     const tokenList = this.tokenArr.map((el) => el.trim());
     const realTokenList = tokenList.filter((el) => el !== '' && el !== ',');
+    this.tokenArr = realTokenList;
     console.log(realTokenList);
-    return realTokenList;
+    return this.tokenArr;
   }
   pushToken(data) {
     this.tokenArr.push(data);
