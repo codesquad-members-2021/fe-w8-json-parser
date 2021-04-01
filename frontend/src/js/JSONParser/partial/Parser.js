@@ -5,60 +5,112 @@ class Parser {
      * @param {Array} lexerTokens 
      * @returns parseTree(Object)
      */
-    createParseTree = (lexerTokens, node = {}) => {
+    createParseTree = (lexerTokens, parentNode = {}, prev = null ) => {
+
         while (lexerTokens.length > 0) {
+
             const lexerToken = lexerTokens.shift(); // 배열 맨 앞 원소 추출
             const {key, type, value, child} = lexerToken;
 
             if (type === 'null') {
-                if (node.child) {
-                    node.child.push({ type, value })
+                if (parentNode.type === 'object' && parentNode.child) {
+                    const lastChildIdx = (parentNode.child.length-1) ? (parentNode.child.length-1) : 0;
+                    const lastChild = parentNode.child[lastChildIdx];
+
+                    if (lastChild && ('propKey' in lastChild.value)) {
+                        lastChild.value.propValue = { type: 'object', value: null };
+                        lastChild.type = "objectProperty";
+                    }
                 } else {
-                    node.child = [];
-                    node.type = 'array';
-                    node.child.push(nodeTemp);
+                    parentNode.child.push({ type: 'object', value: null });
                 }
             } else if (type === 'boolean') {
+                if (parentNode.type === 'object' && parentNode.child) {
+                    const lastChildIdx = (parentNode.child.length-1) ? (parentNode.child.length-1) : 0;
+                    const lastChild = parentNode.child[lastChildIdx];
 
+                    if (lastChild && ('propKey' in lastChild.value)) {
+                        lastChild.value.propValue = { type, value: value === 'true' ? true : false };
+                        lastChild.type = "objectProperty";
+                    }
+                } else {
+                    parentNode.child.push({ type, value: value === 'true' ? true : false });
+                }
             } else if (type === 'number') {
-                //node.child.push({ type, value })
-                if (node.child) {
-                    node.child.push({ type, value: Number(value) })
-                }else{
-                    node.child = [];
-                    node.type = 'array';
-                    node.child.push(nodeTemp);
+                if (parentNode.type === 'object' && parentNode.child) {
+                    const lastChildIdx = (parentNode.child.length-1) ? (parentNode.child.length-1) : 0;
+                    const lastChild = parentNode.child[lastChildIdx];
+
+                    if (lastChild && ('propKey' in lastChild.value)) {
+                        lastChild.value.propValue = {type, value: Number(value) };
+                        lastChild.type = "objectProperty";
+                    }
+                } else {
+                    parentNode.child.push({type, value: Number(value) });
                 }
             } else if (type === 'string') {
-                //node.child.push({ type, value })
-                if (node.child) {
-                    node.child.push({ type, value })
-                }else{
-                    node.child = [];
-                    node.type = 'array';
-                    node.child.push(nodeTemp);
+
+                if (parentNode.type === 'object' && parentNode.child) {
+                    const lastChildIdx = (parentNode.child.length-1) ? (parentNode.child.length-1) : 0;
+                    const lastChild = parentNode.child[lastChildIdx];
+
+                    if (lastChild) {
+                        if ('propKey' in lastChild.value) {
+                            lastChild.value.propValue = { type, value };
+                            lastChild.type = "objectProperty";
+                        }
+                    } else {
+                        parentNode.child.push({
+                            value: {
+                                propKey: {
+                                    type,
+                                    value: value.replace(
+                                        /^(\"|')|(\"|')$/g,
+                                        '',
+                                    ),
+                                },
+                            },
+                        });
+                    }
+                } else {
+                    parentNode.child.push({type, value: value.replace(/^(\"|')|(\"|')$/g, '') });
                 }
             } else if (type === 'arrayOpen') {
-                if (node.child) {
-                    node.child.push({ type, value })  
+                const nodeTmp = this.createParseTree(lexerTokens, { type: 'array', child: [], value: "arrayObject" } );
+
+                if (parentNode.type === 'object' && parentNode.child) {
+                    const lastChildIdx = (parentNode.child.length-1) ? (parentNode.child.length-1) : 0;
+                    const lastChild = parentNode.child[lastChildIdx];
+
+                    if (lastChild && ('propKey' in lastChild.value)) {
+                        lastChild.value.propValue = {...nodeTmp};
+                        lastChild.type = "objectProperty";
+                    }
                 } else {
-                    node.child = [];
-                    node.type = 'array';
-                    const nodeTemp = this.createParseTree(lexerTokens, node); //해결 진행중
+                    if (parentNode.child)
+                        parentNode.child.push(nodeTmp)
+                    else
+                        parentNode = { ...nodeTmp }; //결과값을 반환하기 직전
                 }
             } else if (type === 'arrayClose') {
-                //여기가 뭔가 이상해~~
                 break;
             } else if (type === 'objectOpen') {
+                const nodeTmp = this.createParseTree(lexerTokens, { type: 'object', child: [] } );
+
+                if (parentNode.child)
+                    parentNode.child.push(nodeTmp)
+                else
+                    parentNode = { ...nodeTmp };
 
             } else if (type === 'objectClose') {
+                break;
 
             } else if (type === 'colon') {
 
-            } else
+            } else  
                 console.log('ERROR!', type);
 
-
+            prev = lexerToken;
             // --------------------------------------------
             // if (lexerToken === "dirstart") {
             //     const node = parseDir(lexerTokens);
@@ -70,7 +122,7 @@ class Parser {
             // }
             // ----------------------------------------------
         }
-        return node;
+        return parentNode;
     }
 };
 

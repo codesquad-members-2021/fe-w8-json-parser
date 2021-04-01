@@ -15,7 +15,6 @@ class JSONParser {
         this.lexer = lexer;
         this.parser = parser;
     }
-
     init = () => {
         this.setAnalysisBtnClickEvent(this.analysisBtn);
     };
@@ -27,11 +26,17 @@ class JSONParser {
             '["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, "world"]},112],55, "99"],{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]';
 
         const testData1 = '[12, [123], null, "1"]';
-        const testData2 = '[12,[2]]';
-
-        const tokens = this.tokenizer.createTokens(testData1);
+        const testData2 = '[12,["2"]]';
+        const testData3 = '["1a3",[null,false,["11",[112233], 1], 23 ], "oper"]';
+        const testObject = '[{"a":"b"}, 12, 5, {"arr": [1, 2 ,3 ] } ]';
+        const testData4 = '{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}';
+        const tokens = this.tokenizer.createTokens(testData4);
+        console.log(tokens)
         const lexerTokens = this.lexer.createLexerTokens(tokens);
+        console.log(lexerTokens)
         const parseTree = this.parser.createParseTree(lexerTokens);
+        console.log(JSON.parse(JSON.stringify(parseTree)));
+        // console.log(parseTree)
     };
 }
 

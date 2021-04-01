@@ -1,0 +1,26 @@
+// [{"a":"b"}]
+
+{
+    "type": "array",
+    "child": [
+        {
+            "type": "object",
+            "child": [
+                {
+                    "value": {
+                        "propKey": {
+                            "value": "a",
+                            "type": "string"
+                        },
+                        "propValue": {
+                            "value": "b",
+                            "type": "string"
+                        }
+                    },
+                    "type": "objectProperty"
+                }
+            ]
+        }
+    ],
+    "value": "arrayObject"
+}
