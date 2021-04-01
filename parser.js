@@ -8,34 +8,35 @@ const parse = (lexedArr, parentNode = {child:[]}, isObject = false, ObjIndex = 0
     case 'undefinded':
     case 'boolean':
     case 'null':
-      if (isObject === "propKey") parentNode.child[ObjIndex].value.propKey = currentNode
-      else if (isObject === "propValue") parentNode.child[ObjIndex].value.propValue = currentNode
-      else parentNode.child.push(currentNode)
+      foo(currentNode, isObject, parentNode, ObjIndex)
     case 'seperator':
-      switch (value) {
-        case "[":
-          parentNode.child.push(parse(lexedArr, makeOpenBracketTemplate()))
-        case "{":
-          parentNode.child.push(parse(lexedArr, makeOpenBraceTemplate(), "propKey"))
-        case "]":
-        case "}":
-          return parentNode
-        case ":":
-          return parse(lexedArr, parentNode, "propValue", ObjIndex)
-        case ",":
-          if(isObject === "propValue") {
-            parentNode.child.push({
-              "value": {
-                "propKey": {},
-                "propValue": {}
-              },
-              "type": "objectProperty"
-            })
-            return parse(lexedArr, parentNode, "propKey", ++ObjIndex)
-          }
-      }
+      if(value === "[")
+        foo(parse(lexedArr, makeOpenBracketTemplate()), isObject, parentNode, ObjIndex)
+      if(value === "{")
+        foo(parse(lexedArr, makeOpenBraceTemplate(), "propKey"), isObject, parentNode, ObjIndex)
+      if(value === "]" || value === "}")
+        return parentNode
+      if(value === ":")
+        return parse(lexedArr, parentNode, "propValue", ObjIndex)
+      if(value === ",")
+        if(isObject === "propValue") {
+          parentNode.child.push({
+            "value": {
+              "propKey": {},
+              "propValue": {}
+            },
+            "type": "objectProperty"
+          })
+          return parse(lexedArr, parentNode, "propKey", ++ObjIndex)
+        }
   }
   return parse(lexedArr, parentNode, isObject, ObjIndex)
+}
+
+const foo = (currentNode ,isObject, parentNode, ObjIndex) => {
+  if (isObject === "propKey") parentNode.child[ObjIndex].value.propKey = currentNode
+  else if (isObject === "propValue") parentNode.child[ObjIndex].value.propValue = currentNode
+  else parentNode.child.push(currentNode)
 }
 
 const makeOpenBracketTemplate = () => {

@@ -8,6 +8,8 @@ const test2 = `["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, 
 
 const test3 = '["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, "world"]},112],55, "99"],{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]'
 
-console.log(lex(tokenize(test2)))
-const please = parse(lex(tokenize(test2)))
+const test4 = '["1a3",{"easy" : ["hello", {"a":"a"}, "world"]},55, "99",{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]'
+
+// console.log(lex(tokenize(test4)))
+const please = parse(lex(tokenize(test4)))
 console.log(JSON.stringify(please, null, '  '))
