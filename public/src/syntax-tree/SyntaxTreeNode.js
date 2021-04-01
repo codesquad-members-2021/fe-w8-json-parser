@@ -48,12 +48,15 @@ export default class SyntaxTreeNode {
   }
 
   getChild() {
-    return this.child ?? null;
+    return this.child;
+  }
+
+  getPropValue() {
+    return this.propValue;
   }
 
   toString() {
-    // TODO: take care the case that 'this.value' is 'SyntaxTreeNode'
-    const result = '{\n';
+    let result = '{\n';
 
     for (const [prop, v] of Object.entries(this)) {
       if (prop !== 'child') {
@@ -63,6 +66,11 @@ export default class SyntaxTreeNode {
 
       if (prop.length === 0)
         continue;
+
+      if (v instanceof SyntaxTreeNode) {
+
+        continue;
+      }
 
       result += this.v.reduce((str, child) => { return str + child.toString(); }, '"child" : [\n');
       result += '],\n';

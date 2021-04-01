@@ -9,14 +9,46 @@ const tcs = [
   '{"a":"str","b":[912, [5656, 33],{"key" : "innervalue","newkeys": [1,2,3,4,5]}]}',
 ];
 
-tcs.forEach((tc, idx) => {
-  console.log('test', idx);
-  console.log('input:', tc);
-  const tokens = tokenizer(tc);
+function createSyntaxTree(json) {
+  const tokens = tokenizer(json);
   console.log('tokens:', JSON.stringify(tokens));
   const lexerTokens = lexer(tokens);
   console.log('lexerTokens:', lexerTokens);
-  const syntaxTree = parse(lexerTokens);
-  console.log('syntaxTree:', JSON.stringify(syntaxTree, null, '  '));
-  console.log(syntaxTree.toString());
-});
+  return parse(lexerTokens);
+}
+
+function test_integratedParser() {
+  console.log('run test_integratedParser()');
+
+  tcs.forEach((tc, idx) => {
+    console.log('test', idx);
+    console.log('input:', tc);
+    const syntaxTree = createSyntaxTree(tc);
+    console.log('syntaxTree:', JSON.stringify(syntaxTree, null, '  '));
+  });
+}
+
+function test_syntaxTreeToString() {
+  console.log('run test_syntaxTreeToString()');
+
+  tcs.forEach((tc, idx) => {
+    console.log('test', idx);
+    console.log('input:', tc);
+    const syntaxTree = createSyntaxTree(tc);
+    console.log('syntaxTree.toSTring():', syntaxTree.toString());
+  });
+}
+
+function test_syntaxTreeGetArrayDepth() {
+  console.log('run test_syntaxTreeGetArrayDepth()');
+
+  tcs.forEach((tc, idx) => {
+    console.log('test', idx);
+    console.log('input:', tc);
+    const syntaxTree = createSyntaxTree(tc);
+    console.log('syntaxTree.getArrayDepth():', syntaxTree.getArrayDepth());
+  })
+}
+
+// test_integratedParser();
+test_syntaxTreeGetArrayDepth();
