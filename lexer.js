@@ -7,9 +7,7 @@ const isString = (token) => {
   return strRegex.test(token);
 }
 
-const isSeparator = (token) => {
-  return v.separator.includes(token);
-}
+const isSeparator = (token) => v.separator.includes(token)
 
 const isNull = (token) => token === "null";
 
