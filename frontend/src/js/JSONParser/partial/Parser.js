@@ -5,49 +5,32 @@ class Parser {
      * @param {Array} lexerTokens 
      * @returns parseTree(Object)
      */
-    createParseTree = (lexerTokens, node = {}) => {
+    createParseTree = (lexerTokens, parentNode = {} ) => {
         while (lexerTokens.length > 0) {
             const lexerToken = lexerTokens.shift(); // 배열 맨 앞 원소 추출
             const {key, type, value, child} = lexerToken;
 
             if (type === 'null') {
-                if (node.child) {
-                    node.child.push({ type, value })
-                } else {
-                    node.child = [];
-                    node.type = 'array';
-                    node.child.push(nodeTemp);
-                }
+                parentNode.child.push({ type: 'object', value: null });
             } else if (type === 'boolean') {
-
+                parentNode.child.push({ type, value: value === 'true' ? true : false });
             } else if (type === 'number') {
-                //node.child.push({ type, value })
-                if (node.child) {
-                    node.child.push({ type, value: Number(value) })
-                }else{
-                    node.child = [];
-                    node.type = 'array';
-                    node.child.push(nodeTemp);
-                }
+                parentNode.child.push({type, value: Number(value) });
             } else if (type === 'string') {
-                //node.child.push({ type, value })
-                if (node.child) {
-                    node.child.push({ type, value })
-                }else{
-                    node.child = [];
-                    node.type = 'array';
-                    node.child.push(nodeTemp);
-                }
+                parentNode.child.push({type, value: value.replace(/^(\"|')|(\"|')$/g, '') });
             } else if (type === 'arrayOpen') {
-                if (node.child) {
-                    node.child.push({ type, value })  
-                } else {
-                    node.child = [];
-                    node.type = 'array';
-                    const nodeTemp = this.createParseTree(lexerTokens, node); //해결 진행중
-                }
+                const nodeTmp = this.createParseTree(lexerTokens, { type: 'array', child: [] } );
+                
+                if (parentNode.child) 
+                    parentNode.child.push(nodeTmp)
+                else
+                    parentNode = { ...nodeTmp };
+                // const s = Object.create(nodeTmp);
+                // console.log(nodeTmp, '----------------------');
+                
+                // console.log(parentNode, '----------------------');
+                // parentNode.child.push(nodeTmp);
             } else if (type === 'arrayClose') {
-                //여기가 뭔가 이상해~~
                 break;
             } else if (type === 'objectOpen') {
 
@@ -70,7 +53,7 @@ class Parser {
             // }
             // ----------------------------------------------
         }
-        return node;
+        return parentNode;
     }
 };
 
