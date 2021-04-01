@@ -20,7 +20,21 @@ export default {
         path.resolve(__dirname, "public/src"),
       ],
       exclude: /node_modules/,
-      use: ['babel-loader']
+      use: {
+        loader: 'babel-loader',
+        options: {
+          "presets": [
+            [
+              "@babel/preset-env",
+              {
+                "targets" : { "ie":11 },
+                "useBuiltIns" : "usage",
+                "corejs" : {"version": 3, "proposals": true }
+              }
+            ]
+        ],
+        }
+      }
     }, {
       test: /\.scss$/,
       use: ['style-loader', 'css-loader', 'sass-loader'],
