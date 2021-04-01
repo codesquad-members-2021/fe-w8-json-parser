@@ -9,9 +9,173 @@
 - [x] Webpack, babel을 직접 구성한다. (기존 구성 재활용),
 - 객체지향, 함수형 상관 없음.
 - 하나의 커다란 함수(객체)로 만들지 않고 모듈을 나눈다.
-  - Tokenizer 모듈
-  - Lexer 모듈
-  - Parser 모듈
+
+  - functio JSONDataParser (string: inputData())
+
+        - Tokenizer 모듈
+
+          <!-- - input: (string: '["1a3",["she\'s gone", null,false,["11",[112233],{"easy" : ["hel]lo", {"a":"a"}, "world"]},112],55, "99"],{"a":"str",  "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]') -->
+          - input: '[1, 2, null, 3, "raccoon", [4, [ 5, true, 6], 7], 8, "luke"]'
+
+          <!-- - output: (array: ["[", ""1a3"", ",", "[", ""she's gone"", ",", "null", ",", "false", ",", "[", ""11"", ",", "[", "112233", "]", ",", "{", ""easy"", ":", "", "[", ""hel]lo"", ",", "", "{", ""a"", ":", ""a"", "}", ",", "", ""world"", "]", "}", ",", "112", "]", ",", "55", ",", "", ""99"", "]", ",", "{", ""a"", ":", ""str"", ",", "", ""b"", ":", "[", "912", ",", "[", "5656", ",", "33", "]", ",", "{", ""key"", ":", "", ""innervalue"", ",", "", ""newkeys"", ":", "", "[", "1", ",", "2", ",", "3", ",", "4", ",", "5", "]", "}", "]", "}", ",", "true", "]"]) -->
+
+          - output: ["[", "1", "2", "null", "3", ""raccooon"", "[", "4", "[", "5", "true", "6", "]", "7", "]", "8", ""luke"", "]"]
+
+        - Lexer 모듈
+
+          <!-- - input: (array: ["[", ""1a3"", ",", "[", ""she's gone"", ",", "null", ",", "false", ",", "[", ""11"", ",", "[", "112233", "]", ",", "{", ""easy"", ":", "", "[", ""hel]lo"", ",", "", "{", ""a"", ":", ""a"", "}", ",", "", ""world"", "]", "}", ",", "112", "]", ",", "55", ",", "", ""99"", "]", ",", "{", ""a"", ":", ""str"", ",", "", ""b"", ":", "[", "912", ",", "[", "5656", ",", "33", "]", ",", "{", ""key"", ":", "", ""innervalue"", ",", "", ""newkeys"", ":", "", "[", "1", ",", "2", ",", "3", ",", "4", ",", "5", "]", "}", "]", "}", ",", "true", "]"]) -->
+
+          - input: ["[", "1", "2", "null", "3", ""raccooon"", "[", "4", "[", "5", "true", "6", "]", "7", "]", "8", ""luke"", "]"]
+
+          - output: [
+            {
+              key: 0,
+              type: 'array',
+              value: '[',
+              subType: arrayOpen,
+              child: [
+                {
+                  key: 1,
+                  type: 'number',
+                  value: '1',
+                  subType: null,
+                  child: null,
+                },
+                {
+                  key: 2,
+                  type: 'number',
+                  value: '2',
+                  subType: null,
+                  child: null,
+                },
+                {
+                  key: 3,
+                  type: 'null', // typeof object, 예외처리가 필요
+                  value: 'null',
+                  subType: typeofNull,
+                  child: null,
+                },
+                {
+                  key: 4,
+                  type: 'number'
+                  value: '3',
+                  subType: null,
+                  child: null,
+                },
+                {
+                  key: 5,
+                  type: 'string'
+                  value: 'raccoon',
+                  subType: null,
+                  child: null,
+                },
+                {
+                  key: 6,
+                  type: 'array'
+                  value: '[',
+                  subType: 'arrayOpen',
+                  child: [
+                    {
+                      key: 7,
+                      type: 'number'
+                      value: '4',
+                      subType: null,
+                      child: null,
+                    },
+                    {
+                      key: 8,
+                      type: 'array'
+                      value: '[',
+                      subType: 'arrayOpen',
+                      child: [
+                        {
+                          key: 9,
+                          type: 'number'
+                          value: '5',
+                          subType: null,
+                          child: null,
+                        },
+                        {
+                          key: 10,
+                          type: 'boolean'
+                          value: true,
+                          subType: null,
+                          child: null,
+                        },
+                        {
+                          key: 11,
+                          type: 'number'
+                          value: 6,
+                          subType: null,
+                          child: null,
+                        },
+                      ],
+                    },
+                    {
+                      key: 12,
+                      type: 'array'
+                      value: ']',
+                      subType: 'arrayClose',
+                      child: null,
+                    },
+                    {
+                      key: 13,
+                      type: 'number'
+                      value: '7',
+                      subType: null,
+                      child: null,
+                    },
+                  ],
+                },
+                {
+                  key: 14,
+                  type: 'array'
+                  value: ']',
+                  subType: 'arrayClose',
+                  child: null,
+                },
+                {
+                  key: 15,
+                  type: 'number'
+                  value: 8,
+                  subType: null,
+                  child: null,
+                },
+                {
+                  key: 16,
+                  type: 'string'
+                  value: 'luke',
+                  subType: null,
+                  child: null,
+                },
+              ]
+            },
+            {
+              key: 17,
+              type: 'array'
+              value: ']',
+              subType: 'arrayClose',
+              child: null,
+            },
+          ]
+
+    {
+    key: 0 //배열의 index 또는 객체의 키값
+    type: 'array' //string, null, 등
+    value: '[' //값
+    subType: 'open' || 'close' // arrayOpen, objectOpen..
+    child: [
+    {
+    key: 0,
+    type:
+    }
+    ] //자식노드
+    },
+    ...
+    ])
+
+        - Parser 모듈
+
 - TypeScript를 babel에 연동하고, 부분적으로 적용해본다.
 
 ## 힌트
