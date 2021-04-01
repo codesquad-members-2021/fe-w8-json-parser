@@ -12,7 +12,6 @@ const tokenize = (str, temp = [], queue = []) => {
         return tokenize(str.substring(1), [], queue);
     }
     return tokenize(str.substring(1), [...temp, str[0]], queue);
-    
 }
 
 const isQuoteClosed = tokenArr => tokenArr.filter(e => e === `"`).length !== 1;
