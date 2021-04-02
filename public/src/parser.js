@@ -1,6 +1,5 @@
 import { Type } from './const.js';
 import Queue from './container/Queue.js';
-// import Stack from './container/Stack.js';
 import SyntaxTree from './syntax-tree/SyntaxTree.js';
 import SyntaxTreeNode from './syntax-tree/SyntaxTreeNode.js';
 
@@ -30,37 +29,37 @@ function childParse({ parentNode, tokens, depth }) {
       if (tokenQueue.shift().type !== Type.COLON) // next of "key" is shold be :
         throw new Error(`Invalid syntax, ':' is not exist!`);
 
-      if (depth === 3) debugger;
-
       const objPropNode = new SyntaxTreeNode({ type: Type.OBJECT_PROPERTY, depth: depth + 1 });
-      const valueNode = new SyntaxTreeNode({ propKey: new SyntaxTreeNode(propKeyToken), depth: objPropNode.getDepth() + 1 });
+      const valueNode = new SyntaxTreeNode({ depth: objPropNode.getDepth() + 1 });
+      const propKeyNode = new SyntaxTreeNode({ type: propKeyToken.type, value: propKeyToken.value, depth: valueNode.getDepth() + 1 });
+      valueNode.setPropKey(propKeyNode);
+      
       const propValueToken = tokenQueue.shift();
+      const propValueNode = new SyntaxTreeNode({ depth: valueNode.getDepth() + 1 });
 
       if (propValueToken.type === Type.STRING || propValueToken.type === Type.BOOLEAN || propValueToken.type === Type.NUMBER) {
-        const propValueNode = new SyntaxTreeNode(propValueToken);
-        valueNode.setPropValue(propValueNode);
+        propValueNode.setType(propValueToken.type);
+        propValueNode.setValue(propValueToken.value);
       } else if (propValueToken.type === Type.LBRAKET) {    // if value token is array
-        const propValueNode = new SyntaxTreeNode({ type: Type.ARRAY, value: 'arrayObject' });
+        propValueNode.setType(Type.Array);
+        propValueNode.setValue('arrayObject');
         childParse({    // recursion this function with array type
           parentNode: propValueNode,
           tokens: getPartialTokens({ rightType: Type.RBRAKET, tokenQueue }),
           depth: valueNode.getDepth() + 1
         });
-        valueNode.setPropValue(propValueNode);
       } else if (propValueToken.type === Type.LBRACE) {   // if value token is object
-        const propValueNode = new SyntaxTreeNode({ type: Type.OBJECT });
+        propValueNode.setType(Type.OBJECT);
         childParse({  // recursion this function with object type
           parentNode: propValueNode,
           tokens: getPartialTokens({ rightType: Type.RBRACE, tokenQueue }),
           depth: valueNode.getDepth() + 1
         });
-        valueNode.setPropValue(propValueNode);
       } else {
         throw new Error(`Invalid propValue type, ${propValueToken.type}`);
       }
       
-      valueNode.getPropKey().setDepth(valueNode.getDepth() + 1);
-      valueNode.getPropValue().setDepth(valueNode.getDepth() + 1);
+      valueNode.setPropValue(propValueNode);
       objPropNode.setValue(valueNode);
       parentNode.appendChild(objPropNode);
       continue;   // object case of parent node is end
