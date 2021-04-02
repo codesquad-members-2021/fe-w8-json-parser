@@ -1,35 +1,37 @@
-import OutputPresentational from "./outputPresentational.js"
+import OutputPresentational from "./outputPresentational.js";
 import "./output.scss";
 
 class OutputContainer {
-	constructor({ $target }) {
-		this.presentationals = null;
-		this.stringifiedData = "";
+  constructor({ $target, model }) {
+    this.model = model;
+    this.presentationals = null;
+    this.stringifiedData = "";
 
-		this.$output = document.createElement("section");
-		this.$output.className = "output-section";
-		$target.appendChild(this.$output)
+    this.$output = document.createElement("section");
+    this.$output.className = "output-section";
+    $target.appendChild(this.$output);
 
-		this.setState();
-	}
+    this.model.subscribe(this.updateLog.bind(this));
+    this.setState();
+  }
 
-	setState() {
-		this.render()
-	}
+  setState() {
+    this.render();
+  }
 
-	updateLog(stringifiedData) {
-		this.stringifiedData = stringifiedData;
-		this.setState();
-	}
+  updateLog(stringifiedData) {
+    this.stringifiedData = stringifiedData;
+    this.setState();
+  }
 
-	render() {
-		this.presentationals = {
-			output: new OutputPresentational({
-				$target: this.$output,
-				stringifiedData: this.stringifiedData
-			})
-		};
-	}
+  render() {
+    this.presentationals = {
+      output: new OutputPresentational({
+        $target: this.$output,
+        stringifiedData: this.stringifiedData,
+      }),
+    };
+  }
 }
 
-export default OutputContainer
+export default OutputContainer;

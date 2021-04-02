@@ -1,5 +1,6 @@
 import InputContainer from "./components/input/inputContainer.js";
 import OutputContainer from "./components/output/outputContainer.js";
+import Model from "./components/observable/model.js";
 
 export default class App {
   constructor({ $target }) {
@@ -13,8 +14,9 @@ export default class App {
   }
 
   render($target) {
-    const outputContainer = new OutputContainer({ $target });
-    const inputContainer = new InputContainer({ $target, outputContainer });
+    const model = new Model();
+    const outputContainer = new OutputContainer({ $target, model });
+    const inputContainer = new InputContainer({ $target, model });
 
     this.components = { inputContainer, outputContainer };
   }
