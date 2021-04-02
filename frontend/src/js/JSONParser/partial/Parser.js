@@ -3,7 +3,6 @@ class Parser {
     constructor() {
         this.QUOTES = /^(\"|')|(\"|')$/g;
         this.PRIMITIVE = /null|boolean|number|string/;
-        this.arrayNesting = 0; //test
     }
 
     /**
@@ -12,48 +11,33 @@ class Parser {
      * @returns parseTree(Object)
      */
     createParseTree = (lexerTokens, parentNode = {} ) => {
-
         while (lexerTokens.length > 0) {
-            const lexerToken = lexerTokens.shift(); // 배열 맨 앞 원소 추출
+            const lexerToken = lexerTokens.shift();
             const { type } = lexerToken;
 
-            if (this.isPrimitiveType(type)) {
-                const primitiveItem = this.createPrimitiveItem(lexerToken);
+            if ( (type === 'arrayClose') || (type === 'objectClose') ) break;
 
-                if (parentNode.type === 'object' && parentNode.child)
-                    this.createObjectProps(parentNode, lexerToken, primitiveItem);
-                else
-                    parentNode.child.push(primitiveItem);
+            const primitiveFlag = this.isPrimitiveType(type);
+
+            const item = primitiveFlag
+                ? this.createPrimitiveItem(lexerToken)
+                : this.createParseTree(
+                      lexerTokens,
+                      type === 'objectOpen' //lexerToken의 type이 objectOpen일 때 
+                          ? { type: 'object', child: [] }
+                          : { type: 'array', child: [], value: 'arrayObject' },
+                  ); //(parentNode.type === 'object')  재귀(createParseTree)로 들어가고 나서야 생김
+
+            if ( (parentNode.type === 'object') && parentNode.child) {
+                this.createObjectProps(parentNode, lexerToken, item);
             } else {
-                if (type === 'arrayOpen') {
-                    const nodeTmp = this.createParseTree(lexerTokens, { type: 'array', child: [], value: "arrayObject" } );
-                    this.arrayNesting++;  //test
-
-                    if (parentNode.type === 'object' && parentNode.child) {
-                        const lastChildIdx = (parentNode.child.length-1) ? (parentNode.child.length-1) : 0;
-                        const lastChild = parentNode.child[lastChildIdx];
-
-                        if (lastChild && ('propKey' in lastChild.value)) {
-                            lastChild.value.propValue = {...nodeTmp};
-                            lastChild.type = "objectProperty";
-                        }
-                    } else {
-                        if (parentNode.child)
-                            parentNode.child.push(nodeTmp)
-                        else
-                            parentNode = { ...nodeTmp }; //결과값을 반환하기 직전
-                    }
-                } else if (type === 'objectOpen') {
-                    const nodeTmp = this.createParseTree(lexerTokens, { type: 'object', child: [] } );
-
+                if (!primitiveFlag) {
                     if (parentNode.child)
-                        parentNode.child.push(nodeTmp)
+                        parentNode.child.push(item)
                     else
-                        parentNode = { ...nodeTmp };
-
-                } else if ( (type === 'arrayClose') || (type === 'objectClose') ) {
-                    break;
-                } else console.log('ERROR!', type);
+                        parentNode = { ...item };
+                } else
+                    parentNode.child.push(item);
             }
         }
         return parentNode;
@@ -93,20 +77,25 @@ class Parser {
         }
     })
 
-    createObjectProps = (parentNode, { type, value }, primitiveItem ) => {
+    createObjectProps = (parentNode, { type, value }, propValueItem ) => {
         const lastChildIdx = (parentNode.child.length-1) ? (parentNode.child.length-1) : 0;
         const lastChild = parentNode.child[lastChildIdx];
 
         if (lastChild) {
             if (('propKey' in lastChild.value) && ('propValue' in lastChild.value)) {
-                const strPropKey = this.createObjectPropKey(primitiveItem, {type, value});
+                const strPropKey = this.createObjectPropKey(propValueItem, {type, value});
                 parentNode.child.push(strPropKey);
             } else if (('propKey' in lastChild.value)) {
-                lastChild.value.propValue = primitiveItem || this.createPrimitiveItem({type, value});
+                const propValue =
+                    type === 'arrayOpen'
+                        ? { ...propValueItem }
+                        : propValueItem;
+
+                lastChild.value.propValue = propValue;
                 lastChild.type = "objectProperty";
             }
         } else {
-            const strPropKey = this.createObjectPropKey(primitiveItem, {type, value});
+            const strPropKey = this.createObjectPropKey(propValueItem, {type, value});
             parentNode.child.push(strPropKey);
         }
     };

@@ -3,7 +3,7 @@ class Tokenizer {
     constructor() {
         this.tokenType = {
             SEPARATOR: /{|}|\[|\]|,|:|\s/,
-            LITERAL: /null|(true|false)|(-?[0-9]+(?:\.[0-9]+)?)|("(?:[^"\\]*|\\")*")/,
+            LITERAL: /null|(true|false)|(-?[0-9]+(\.[0-9]+)?)|("([^"\\]*|\\")*")/,
         };
     };
 

@@ -6,8 +6,8 @@ class Lexer {
         this.lexerType = {
             NULL: /null/,
             BOOLEAN: /true|false/,
-            NUMBER: /(-?[0-9]+(?:\.[0-9]+)?)/,
-            STRING: /"(?:[^"\\]*|\\")*"/,
+            NUMBER: /(-?[0-9]+(\.[0-9]+)?)/,
+            STRING: /"([^"\\]*|\\")*"/,
             ARRAYOPEN: /\[/,
             ARRAYCLOSE: /\]/,
             OBJECTOPEN: /{/,
