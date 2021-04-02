@@ -1,7 +1,25 @@
 
 import '../scss/main.scss';
 import '../scss/util.scss';
+import tokenize from './tokenize.js';
+import lexicalize from './lexicalize.js';
+import parse from './parse.js';
 
-const jsonData = '["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, "world"]},112],55, "99"],{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]';
-console.log('123');
+function load() {
+  const el = {
+    $button: document.querySelector('._button'),
+    $textarea: document.querySelector('._input_text'),
+    $printBox: document.querySelector('._print_box')
+  }
 
+  function parseClickHandler() {
+    const tokens = tokenize(el.$textarea.value);
+    const lexerTokens = lexicalize(tokens);
+    const parseData = parse(lexerTokens);
+    el.$printBox.innerText = JSON.stringify(parseData, null, ' ');
+  }
+
+  el.$button.addEventListener('click', parseClickHandler);
+}
+
+window.addEventListener('DOMContentLoaded', load);
