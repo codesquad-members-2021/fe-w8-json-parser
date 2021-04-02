@@ -22,7 +22,7 @@ export default class SyntaxTree {
 
 class SyntaxTreeRootNode extends SyntaxTreeNode {
   constructor() {
-    super({ type: 'root'});
+    super({ type: 'root' });
   }
 
   getEntryNode() {
@@ -36,5 +36,5 @@ function arrayDepthRecursion({ currNode, depth }) {
       resultDepth = Math.max(resultDepth, arrayDepthRecursion({ currNode: childNode.getValue().getPropValue(), depth }) ?? 0);
     
     return Math.max(resultDepth, arrayDepthRecursion({ currNode: childNode, depth }) ?? 0);
-  }, urrNode.getType() === Type.ARRAY ? depth + 1 : depth);
+  }, currNode.getType() === Type.ARRAY ? depth + 1 : depth);
 }

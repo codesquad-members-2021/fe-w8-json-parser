@@ -8,11 +8,11 @@ import SyntaxTreeNode from './syntax-tree/SyntaxTreeNode.js';
 
 export function parse(tokens) {
   const syntaxTree = new SyntaxTree();
-  childParse({ parentNode: syntaxTree.getRoot(), tokens });
+  childParse({ parentNode: syntaxTree.getRoot(), tokens, depth: 0 });
   return syntaxTree;
 }
 
-function childParse({ parentNode, tokens }) {
+function childParse({ parentNode, tokens, depth }) {
   const tokenQueue = new Queue({ initialData: tokens });
 
   while (!tokenQueue.empty()) { // shift tokenQueue until it's empty
@@ -30,8 +30,10 @@ function childParse({ parentNode, tokens }) {
       if (tokenQueue.shift().type !== Type.COLON) // next of "key" is shold be :
         throw new Error(`Invalid syntax, ':' is not exist!`);
 
-      const objPropNode = new SyntaxTreeNode({ type: Type.OBJECT_PROPERTY });
-      const valueNode = new SyntaxTreeNode({ propKey: new SyntaxTreeNode(propKeyToken) });
+      if (depth === 3) debugger;
+
+      const objPropNode = new SyntaxTreeNode({ type: Type.OBJECT_PROPERTY, depth: depth + 1 });
+      const valueNode = new SyntaxTreeNode({ propKey: new SyntaxTreeNode(propKeyToken), depth: objPropNode.getDepth() + 1 });
       const propValueToken = tokenQueue.shift();
 
       if (propValueToken.type === Type.STRING || propValueToken.type === Type.BOOLEAN || propValueToken.type === Type.NUMBER) {
@@ -41,43 +43,49 @@ function childParse({ parentNode, tokens }) {
         const propValueNode = new SyntaxTreeNode({ type: Type.ARRAY, value: 'arrayObject' });
         childParse({    // recursion this function with array type
           parentNode: propValueNode,
-          tokens: getPartialTokens({ rightType: Type.RBRAKET, tokenQueue })
+          tokens: getPartialTokens({ rightType: Type.RBRAKET, tokenQueue }),
+          depth: valueNode.getDepth() + 1
         });
         valueNode.setPropValue(propValueNode);
       } else if (propValueToken.type === Type.LBRACE) {   // if value token is object
         const propValueNode = new SyntaxTreeNode({ type: Type.OBJECT });
         childParse({  // recursion this function with object type
           parentNode: propValueNode,
-          tokens: getPartialTokens({ rightType: Type.RBRACE, tokenQueue })
+          tokens: getPartialTokens({ rightType: Type.RBRACE, tokenQueue }),
+          depth: valueNode.getDepth() + 1
         });
         valueNode.setPropValue(propValueNode);
       } else {
         throw new Error(`Invalid propValue type, ${propValueToken.type}`);
       }
-
+      
+      valueNode.getPropKey().setDepth(valueNode.getDepth() + 1);
+      valueNode.getPropValue().setDepth(valueNode.getDepth() + 1);
       objPropNode.setValue(valueNode);
       parentNode.appendChild(objPropNode);
       continue;   // object case of parent node is end
     }
 
     if (currToken.type === Type.LBRAKET) {    // if token is [
-      const newNode = new SyntaxTreeNode({ type: Type.ARRAY, value: 'arrayObject' });
+      const newNode = new SyntaxTreeNode({ type: Type.ARRAY, value: 'arrayObject', depth: depth + 1 });
       childParse({
         parentNode: newNode,
-        tokens: getPartialTokens({ rightType: Type.RBRAKET, tokenQueue })
+        tokens: getPartialTokens({ rightType: Type.RBRAKET, tokenQueue }),
+        depth: depth + 1
       });
       parentNode.appendChild(newNode);
     } else if (currToken.type === Type.LBRACE) {
-      const newNode = new SyntaxTreeNode({ type: Type.OBJECT });
+      const newNode = new SyntaxTreeNode({ type: Type.OBJECT, depth: depth + 1 });
       childParse({
         parentNode: newNode,
-        tokens: getPartialTokens({ rightType: Type.RBRACE, tokenQueue })
+        tokens: getPartialTokens({ rightType: Type.RBRACE, tokenQueue }),
+        depth: depth + 1
       });
       parentNode.appendChild(newNode);
     } else if (currToken.type === Type.COLON) {
       throw new Error(`Invalid syntax, invalid ':'`);
     } else if (currToken.type === Type.STRING || currToken.type === Type.BOOLEAN || currToken.type === Type.NUMBER || currToken.type === Type.NULL) {
-      const newNode = new SyntaxTreeNode({ type: currToken.type, value : currToken.value });
+      const newNode = new SyntaxTreeNode({ type: currToken.type, value : currToken.value, depth: depth + 1 });
       parentNode.appendChild(newNode);
     } else {
       throw new Error(`Invalid tokens, ${tokens}`);

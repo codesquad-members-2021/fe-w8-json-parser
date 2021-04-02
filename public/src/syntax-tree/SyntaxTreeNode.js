@@ -1,6 +1,9 @@
+import { Type } from "../const.js";
+
 export default class SyntaxTreeNode {
-  constructor({ type, value, propKey, propValue } = {}) {
+  constructor({ type, value, propKey, propValue, depth } = {}) {
     this.type = type;
+    this.depth = depth;
     this.child;
     this.value = value;
     this.propKey = propKey;
@@ -39,6 +42,10 @@ export default class SyntaxTreeNode {
     this.propValue = valueNode;
   }
 
+  setDepth(depth) {
+    this.depth = depth;
+  }
+
   getType() {
     return this.type;
   }
@@ -51,32 +58,54 @@ export default class SyntaxTreeNode {
     return this.child;
   }
 
+  getPropKey() {
+    return this.propKey;
+  }
+
   getPropValue() {
     return this.propValue;
   }
 
+  getDepth() {
+    return this.depth;
+  }
+
   toString() {
-    let result = '{\n';
+    const indent = Array(this.depth).join('\t');
+    const innerIndent = indent + '\t';
+    let result = `{`;
+    let idx = 0;
 
-    for (const [prop, v] of Object.entries(this)) {
-      if (prop !== 'child') {
-        result += `"${prop}" : "${v}",\n`;
-        continue;
-      }
+    Object.entries(this).forEach(([prop, v]) => {
+      if (!v || v?.length === 0 || prop === 'depth')
+        return;
 
-      if (prop.length === 0)
-        continue;
+      if (idx++ > 0)
+        result += ',';
 
       if (v instanceof SyntaxTreeNode) {
-
-        continue;
+        result += `\n${innerIndent}"${prop}" : ${v.toString()}`;
+        return;
       }
 
-      result += this.v.reduce((str, child) => { return str + child.toString(); }, '"child" : [\n');
-      result += '],\n';
-    }
+      if (prop !== 'child') {
+        if (prop === 'value' && (this.type === Type.BOOLEAN || this.type === Type.NUMBER || this.type === Type.NULL))
+          result += `\n${innerIndent}"${prop}" : ${v}`;
+        else
+          result += `\n${innerIndent}"${prop}" : "${v}"`;
+        return;
+      }
 
-    result += '},\n';
+      if (prop !== 'child')
+        throw new Error(`Invalid prop, must be 'child' here!`);
+      
+      result += v.reduce((resultStr, child, reduceIdx) => {
+        return resultStr + (reduceIdx > 0 ? ',\n' : '\n') + innerIndent + child.toString();
+      }, `\n${innerIndent}"child" : [`);
+      result += `\n${innerIndent}]`;
+    })
+
+    result += `\n${indent}}`;
     return result;
   }
 }
