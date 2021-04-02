@@ -26,15 +26,12 @@ class Lexer {
         const lexerTokens = [];
 
         while (tokens.length > 0) {
-            const item = tokens.shift();
-            const type = this.createTokenType(item);
+            const value = tokens.shift();
+            const type = this.createTokenType(value);
 
-            if (type === 'comma') continue;
+            if (type === 'comma' || type === 'colon') continue;
 
-            const lexerTokenParams = {
-                type,
-                value: item,
-            };
+            const lexerTokenParams = { type, value };
             const lexerToken = new LexerToken(lexerTokenParams);
             lexerTokens.push(lexerToken);
         }

@@ -30,13 +30,13 @@ class JSONParser {
         const testData3 = '["1a3",[null,false,["11",[112233], 1], 23 ], "oper"]';
         const testObject = '[{"a":"b"}, 12, 5, {"arr": [1, 2 ,3 ] } ]';
         const testData4 = '{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}';
-        const tokens = this.tokenizer.createTokens(testData4);
-        console.log(tokens)
+        const tokens = this.tokenizer.createTokens(testData);
+        // console.log(tokens)
         const lexerTokens = this.lexer.createLexerTokens(tokens);
-        console.log(lexerTokens)
+        // console.log(lexerTokens)
         const parseTree = this.parser.createParseTree(lexerTokens);
-        console.log(JSON.parse(JSON.stringify(parseTree)));
-        // console.log(parseTree)
+        // console.log(JSON.parse(JSON.stringify(parseTree)));
+        console.log(parseTree)
     };
 }
 
