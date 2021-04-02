@@ -9,56 +9,22 @@
             <section class="json-container">
                 <div class="json-container__title">
                     JSON 데이터를 추가해주세요
+                    <div class="json-container__title__sample">
+                    </div>
                 </div>
                 <textarea
                     class="json-container__input"
                     cols="70"
                     rows="20"
                 ></textarea>
-                <button class="json-container__btn btn btn-outline-success">분석하기</button>
+                <button class="btn btn-outline-success json-container__btn">
+                    <span>분석하기</span>
+                </button>
             </section>
             <section class="result-container">
                 <div class="result-container__title">분석 결과입니다</div>
                 <div class="result-container__result">
                     <textarea class="result-container__result__detail">
-                        "{ "type": "array", "child": [ { "value": "\"1a3\"",
-                        "type": "string" }, { "type": "array", "child": [ {
-                        "value": null, "type": "object" }, { "value": false,
-                        "type": "boolean" }, { "type": "array", "child": [ {
-                        "value": "\"11\"", "type": "string" }, { "type":
-                        "array", "child": [ { "value": 112233, "type": "number"
-                        } ], "value": "arrayObject" }, { "type": "object",
-                        "child": [ { "value": { "propKey": { "value":
-                        "\"easy\"", "type": "string" }, "propValue": { "type":
-                        "array", "child": [ { "value": "\"hello\"", "type":
-                        "string" }, { "type": "object", "child": [ { "value": {
-                        "propKey": { "value": "\"a\"", "type": "string" },
-                        "propValue": { "value": "\"a\"", "type": "string" } },
-                        "type": "objectProperty" } ] }, { "value": "\"world\"",
-                        "type": "string" } ] } }, "type": "objectProperty" } ]
-                        }, { "value": 112, "type": "number" } ], "value":
-                        "arrayObject" }, { "value": 55, "type": "number" }, {
-                        "value": "\"99\"", "type": "string" } ], "value":
-                        "arrayObject" }, { "type": "object", "child": [ {
-                        "value": { "propKey": { "value": "\"a\"", "type":
-                        "string" }, "propValue": { "value": "\"str\"", "type":
-                        "string" } }, "type": "objectProperty" }, { "value": {
-                        "propKey": { "value": "\"b\"", "type": "string" },
-                        "propValue": { "type": "array", "child": [ { "value":
-                        912, "type": "number" }, { "type": "array", "child": [ {
-                        "value": 5656, "type": "number" }, { "value": 33,
-                        "type": "number" } ], "value": "arrayObject" }, {
-                        "type": "object", "child": [ { "value": { "propKey": {
-                        "value": "\"key\"", "type": "string" }, "propValue": {
-                        "value": "\"innervalue\"", "type": "string" } }, "type":
-                        "objectProperty" }, { "value": { "propKey": { "value":
-                        "\"newkeys\"", "type": "string" }, "propValue": {
-                        "type": "array", "child": [ { "value": 1, "type":
-                        "number" }, { "value": 2, "type": "number" }, { "value":
-                        3, "type": "number" }, { "value": 4, "type": "number" },
-                        { "value": 5, "type": "number" } ] } }, "type":
-                        "objectProperty" } ] } ] } }, "type": "objectProperty" }
-                        ] }, { "value": true, "type": "boolean" } ] }"
                     </textarea>
                     <div class="result-container__result__summary"></div>
                 </div>

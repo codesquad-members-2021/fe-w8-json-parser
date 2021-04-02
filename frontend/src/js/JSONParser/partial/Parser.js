@@ -3,6 +3,7 @@ class Parser {
     constructor() {
         this.QUOTES = /^(\"|')|(\"|')$/g;
         this.PRIMITIVE = /null|boolean|number|string/;
+        this.arrayNesting = 0; //test
     }
 
     /**
@@ -26,6 +27,7 @@ class Parser {
             } else {
                 if (type === 'arrayOpen') {
                     const nodeTmp = this.createParseTree(lexerTokens, { type: 'array', child: [], value: "arrayObject" } );
+                    this.arrayNesting++;  //test
 
                     if (parentNode.type === 'object' && parentNode.child) {
                         const lastChildIdx = (parentNode.child.length-1) ? (parentNode.child.length-1) : 0;

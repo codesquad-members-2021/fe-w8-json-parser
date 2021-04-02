@@ -7,6 +7,8 @@ const REFERENCE = {
     inputTextAreaSelector: '.json-container__input',
     resultTextAreaSelector: '.result-container__result__detail',
     analysisBtnSelector: '.json-container__btn',
+    sampleWrapSelector: '.json-container__title__sample',
+    resultSummarySelector: '.result-container__result__summary',
 };
 
 const parserModule = {

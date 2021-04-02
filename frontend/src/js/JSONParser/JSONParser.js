@@ -1,4 +1,5 @@
 import _ from '../util.js';
+import sampleData from "./partial/sample/sampleData.js";
 
 class JSONParser {
     constructor(parserReference, { tokenizer, lexer, parser }) {
@@ -6,37 +7,93 @@ class JSONParser {
             inputTextAreaSelector,
             resultTextAreaSelector,
             analysisBtnSelector,
+            sampleWrapSelector,
+            resultSummarySelector,
         } = parserReference;
-        this.inputTextArea = _.$(inputTextAreaSelector);
-        this.resultTextArea = _.$(resultTextAreaSelector);
-        this.analysisBtn = _.$(analysisBtnSelector);
+        this.$inputTextArea = _.$(inputTextAreaSelector);
+        this.$resultTextArea = _.$(resultTextAreaSelector);
+        this.$analysisBtn = _.$(analysisBtnSelector);
+        this.$sampleDataWrapper = _.$(sampleWrapSelector);
+        this.$resultSummaryWrapper = _.$(resultSummarySelector);
 
         this.tokenizer = tokenizer;
         this.lexer = lexer;
         this.parser = parser;
+
+        this.parseTreeDepth = 0;
     }
     init = () => {
-        this.setAnalysisBtnClickEvent(this.analysisBtn);
+        this.setSampleDataBtn(this.$sampleDataWrapper);
+        this.setAnalysisBtnClickEvent(this.$analysisBtn);
     };
 
     setAnalysisBtnClickEvent = (analysisBtn) =>
-        _.ON(analysisBtn, 'click', (e) => this.analysisBtnClickEventHandler(e));
-    analysisBtnClickEventHandler = () => {
-        const testData =
-            '["1a3",[null,false,["11",[112233],{"easy" : ["hello", {"a":"a"}, "world"]},112],55, "99"],{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]';
+        _.ON(analysisBtn, 'click', this.analysisBtnClickEventHandler.bind(this));
 
-        const testData1 = '[12, [123], null, "1"]';
-        const testData2 = '[12,["2"]]';
-        const testData3 = '["1a3",[null,false,["11",[112233], 1], 23 ], "oper"]';
-        const testObject = '[{"a":"b"}, 12, 5, {"arr": [1, 2 ,3 ] } ]';
-        const testData4 = '{"a":"str", "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}';
-        const tokens = this.tokenizer.createTokens(testData);
-        // console.log(tokens)
+    analysisBtnClickEventHandler = () => {
+        this.initParseTreeDepth();
+        const inputData = this.$inputTextArea.value;
+        const tokens = this.tokenizer.createTokens(inputData);
         const lexerTokens = this.lexer.createLexerTokens(tokens);
-        // console.log(lexerTokens)
         const parseTree = this.parser.createParseTree(lexerTokens);
-        // console.log(JSON.parse(JSON.stringify(parseTree)));
-        console.log(parseTree)
+
+        this.setDepth(parseTree);
+        this.renderParseTree(parseTree);
+        this.renderParseTreeSummary(this.parseTreeDepth, this.lexer.typeSummary);
+    };
+
+    renderParseTree(parseTree) {
+        this.$resultTextArea.value = JSON.stringify(parseTree, null, 3);
+    };
+
+    renderParseTreeSummary(parseTreeDepth, {stringCount, numberCount} ){
+        const template =`<p>배열 중첩 수준 : ${parseTreeDepth}개</p>
+        <p>문자열 타입 갯수 ${stringCount}개</p>
+        <p>숫자 타입 갯수 ${numberCount}개</p>`;
+        this.$resultSummaryWrapper.innerHTML = template;
+    };
+
+    initParseTreeDepth = () => ( (this.parseTreeDepth > 0) && (this.parseTreeDepth = 0) );
+
+    setDepth = (parseTree, depth = 0) => {
+        if (parseTree.child) {
+            depth++;
+            parseTree.child.forEach(item => {
+                this.setDepth(item, depth);
+            })
+        }
+
+        if(depth > this.parseTreeDepth){
+            this.parseTreeDepth = depth;
+        }
+    };
+
+    // 샘플 데이터 버튼 생성 & 이벤트 등록(Click)
+    setSampleDataBtn = (sampleDataWrapper) => {
+        const arrBtnText = Object.keys(sampleData);
+        const btnId = "sampleDatas";
+
+        arrBtnText.forEach((btnText) => {
+            const btnTemplate = this.createSampleDataBtnTemplate(btnText, btnId);
+            sampleDataWrapper.insertAdjacentHTML('beforeend', btnTemplate);
+        });
+
+        const sampleDataBtns = _.$$(`#${btnId}`, sampleDataWrapper);
+        sampleDataBtns.forEach((sampleDataBtn) => this.setSampleDataBtnClickEvent(sampleDataBtn));
+    };
+
+    createSampleDataBtnTemplate = (btnText, btnId) => {
+        return `<button class="btn btn-outline-primary btn-sm mr-1" id=${btnId}>
+            ${btnText}
+        </button>`;
+    };
+
+    setSampleDataBtnClickEvent = (sampleDataBtn) => 
+        _.ON(sampleDataBtn, 'click', (e) => this.sampleDataBtnClickEventHandler(e));
+    sampleDataBtnClickEventHandler = ({target}) => {
+        const targetText = target.innerText;
+        const value = sampleData[targetText];
+        this.$inputTextArea.value = value;
     };
 }
 
