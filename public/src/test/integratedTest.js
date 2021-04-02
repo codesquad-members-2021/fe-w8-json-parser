@@ -51,5 +51,5 @@ function test_syntaxTreeGetArrayDepth() {
 }
 
 // test_integratedParser();
-test_syntaxTreeToString();
-// test_syntaxTreeGetArrayDepth();
+// test_syntaxTreeToString();
+test_syntaxTreeGetArrayDepth();

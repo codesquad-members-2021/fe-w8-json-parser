@@ -41,7 +41,7 @@ function childParse({ parentNode, tokens, depth }) {
         propValueNode.setType(propValueToken.type);
         propValueNode.setValue(propValueToken.value);
       } else if (propValueToken.type === Type.LBRAKET) {    // if value token is array
-        propValueNode.setType(Type.Array);
+        propValueNode.setType(Type.ARRAY);
         propValueNode.setValue('arrayObject');
         childParse({    // recursion this function with array type
           parentNode: propValueNode,
@@ -65,30 +65,33 @@ function childParse({ parentNode, tokens, depth }) {
       continue;   // object case of parent node is end
     }
 
+    const newNode = new SyntaxTreeNode({ depth: depth + 1 });
+
     if (currToken.type === Type.LBRAKET) {    // if token is [
-      const newNode = new SyntaxTreeNode({ type: Type.ARRAY, value: 'arrayObject', depth: depth + 1 });
+      newNode.setType(Type.ARRAY);
+      newNode.setValue('arrayObject');
       childParse({
         parentNode: newNode,
         tokens: getPartialTokens({ rightType: Type.RBRAKET, tokenQueue }),
         depth: depth + 1
       });
-      parentNode.appendChild(newNode);
     } else if (currToken.type === Type.LBRACE) {
-      const newNode = new SyntaxTreeNode({ type: Type.OBJECT, depth: depth + 1 });
+      newNode.setType(Type.OBJECT);
       childParse({
         parentNode: newNode,
         tokens: getPartialTokens({ rightType: Type.RBRACE, tokenQueue }),
         depth: depth + 1
       });
-      parentNode.appendChild(newNode);
     } else if (currToken.type === Type.COLON) {
       throw new Error(`Invalid syntax, invalid ':'`);
     } else if (currToken.type === Type.STRING || currToken.type === Type.BOOLEAN || currToken.type === Type.NUMBER || currToken.type === Type.NULL) {
-      const newNode = new SyntaxTreeNode({ type: currToken.type, value : currToken.value, depth: depth + 1 });
-      parentNode.appendChild(newNode);
+      newNode.setType(currToken.type);
+      newNode.setValue(currToken.value);
     } else {
       throw new Error(`Invalid tokens, ${tokens}`);
     }
+
+    parentNode.appendChild(newNode);
   }
 }
 

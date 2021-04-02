@@ -31,10 +31,17 @@ class SyntaxTreeRootNode extends SyntaxTreeNode {
 }
 
 function arrayDepthRecursion({ currNode, depth }) {
-  return currNode.getChild()?.reduce((resultDepth, childNode) => {
+  const nextDepth = currNode.getType() === Type.ARRAY ? depth + 1 : depth;
+  let resultDepth = depth;
+
+  currNode.getChild()?.forEach(childNode => {
+    let tmpDepth = 0;
+
     if (childNode.getType() === Type.OBJECT_PROPERTY)
-      resultDepth = Math.max(resultDepth, arrayDepthRecursion({ currNode: childNode.getValue().getPropValue(), depth }) ?? 0);
+      tmpDepth = arrayDepthRecursion({ currNode: childNode.getValue().getPropValue(), depth: nextDepth }) ?? 0;
     
-    return Math.max(resultDepth, arrayDepthRecursion({ currNode: childNode, depth }) ?? 0);
-  }, currNode.getType() === Type.ARRAY ? depth + 1 : depth);
+    resultDepth =  Math.max(tmpDepth, resultDepth, arrayDepthRecursion({ currNode: childNode, depth: nextDepth }) ?? 0);
+  });
+
+  return resultDepth;
 }
