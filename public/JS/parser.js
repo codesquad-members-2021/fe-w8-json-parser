@@ -1,4 +1,4 @@
-const parse = (lexedArr, parentNode = {child:[]}, isObject = false, objIndex = 0) => {
+const parse = (lexedArr, parentNode = {child:[]}, isObject = false, objIndex = 0, currentDepth = 0) => {
   if(!lexedArr.length) return parentNode.child;
   const {type, value} = lexedArr.shift()
   switch(type) {
@@ -28,10 +28,31 @@ const addNode = (node, parentNode, isObject, objIndex) => {
   else parentNode.child.push(node)
 }
 
-const makeArrayTemplate = () => ({type: "array", child: [],value: "arrayObject"})
+const makeArrayTemplate = () => ({type: "array", child: []})
 
 const makeObjectTemplate = () => ({type: "object", child: [makePropertyTemplate()]})
 
 const makePropertyTemplate = () => ({value: {propKey: {}, propValue: {}}, type: "objectProperty"})
 
-export { parse }
+const countNumber = (lexedArr) => lexedArr.filter(({type}) => type === "number").length
+
+const countString = (lexedArr) => lexedArr.filter(({type}) => type === "string").length
+
+const countDepth = (lexedArr, stack = []) => {
+  let maxDepth = 0;
+  lexedArr
+    .filter(({value}) => ["[", "]", "{", "}"].includes(value))
+    .forEach(({value}) => {
+      isPair(value, stack) ? stack.pop() : stack.push(value)
+      maxDepth = maxDepth < stack.length ? stack.length : maxDepth
+    })
+  return maxDepth
+}
+
+const isPair = (value, stack) => {
+  if (value === "]") return stack[stack.length-1] === "["
+  if (value === "}") return stack[stack.length-1] === "{"
+  return false
+}
+
+export { parse, countNumber, countString, countDepth }
