@@ -13,7 +13,6 @@ export default class Parser {
       const element = this.lexerList.shift();
       if (element.type === 'arrayOpen') {
         const childNode = this.parse('array');
-        // parentNode.type = this.isObject(element);
         parentNode.child.push(childNode);
       } else if (element.type === 'arrayClose') {
         break;
@@ -29,17 +28,13 @@ export default class Parser {
         propKey.type = this.checkType(element.value);
         propKey.value = element.value;
         this.objectValue.propKey = propKey;
-
-        // parentNode.child.push({ type: 'objectProperty', value: this.objectValue });
-        debugger;
       } else if (element.propType === 'objectValue') {
         const propValue = {};
         propValue.type = this.checkType(element.value);
         propValue.value = element.value;
         this.objectValue.propValue = propValue;
 
-        parentNode.child.push({ type: 'objectProperty', value: this.objectValue });
-        debugger;
+        parentNode.child.push({ type: 'objectProperty', value: { ...this.objectValue } });
       } else {
         parentNode.child.push({ type: this.checkType(element.value), value: element.value });
       }
@@ -53,9 +48,4 @@ export default class Parser {
     if (typeof value === 'string') return 'String';
     if (typeof value === 'object') return 'objectProperty';
   }
-
-  // checkValue(value) {
-  //   if (typeof value === 'object') return objValue;
-  //   return value;
-  // }
 }
