@@ -28,7 +28,9 @@ export default class MainView {
     const lexer = new Lexer(tokenizer.getTokenList());
     const parse = new Parser(lexer.getLexerList());
     const $outputData = _.$('#output-data');
-    $outputData.value = JSON.stringify(parse.parse());
+    const parseData = parse.parse();
+    console.log(parseData);
+    $outputData.value = JSON.stringify(parseData);
   }
   getInputTitle(title) {
     return `

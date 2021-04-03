@@ -15,17 +15,17 @@
         - Tokenizer 모듈
 
           <!-- - input: (string: '["1a3",["she\'s gone", null,false,["11",[112233],{"easy" : ["hel]lo", {"a":"a"}, "world"]},112],55, "99"],{"a":"str",  "b":[912,[5656,33],{"key" : "innervalue", "newkeys": [1,2,3,4,5]}]}, true]') -->
-          - input: '[1, 2, null, 3, "raccoon", [4, [ 5, true, 6], 7], 8, "luke"]'
+          - input: '[1, 2, null, {"name":"raccoon", "class":2 }, "raccoon", [4, [ 5, true, 6], 7], 8, "luke"]'
 
           <!-- - output: (array: ["[", ""1a3"", ",", "[", ""she's gone"", ",", "null", ",", "false", ",", "[", ""11"", ",", "[", "112233", "]", ",", "{", ""easy"", ":", "", "[", ""hel]lo"", ",", "", "{", ""a"", ":", ""a"", "}", ",", "", ""world"", "]", "}", ",", "112", "]", ",", "55", ",", "", ""99"", "]", ",", "{", ""a"", ":", ""str"", ",", "", ""b"", ":", "[", "912", ",", "[", "5656", ",", "33", "]", ",", "{", ""key"", ":", "", ""innervalue"", ",", "", ""newkeys"", ":", "", "[", "1", ",", "2", ",", "3", ",", "4", ",", "5", "]", "}", "]", "}", ",", "true", "]"]) -->
 
-          - output: ["[", "1", "2", "null", "3", ""raccooon"", "[", "4", "[", "5", "true", "6", "]", "7", "]", "8", ""luke"", "]"]
+          - output: ["[", "1", "2", "null", "{" , ""name"", ":", ""raccoon"", ""class"", ":", "2", "}", ""raccooon"", "[", "4", "[", "5", "true", "6", "]", "7", "]", "8", ""luke"", "]"]
 
         - Lexer 모듈
 
           <!-- - input: (array: ["[", ""1a3"", ",", "[", ""she's gone"", ",", "null", ",", "false", ",", "[", ""11"", ",", "[", "112233", "]", ",", "{", ""easy"", ":", "", "[", ""hel]lo"", ",", "", "{", ""a"", ":", ""a"", "}", ",", "", ""world"", "]", "}", ",", "112", "]", ",", "55", ",", "", ""99"", "]", ",", "{", ""a"", ":", ""str"", ",", "", ""b"", ":", "[", "912", ",", "[", "5656", ",", "33", "]", ",", "{", ""key"", ":", "", ""innervalue"", ",", "", ""newkeys"", ":", "", "[", "1", ",", "2", ",", "3", ",", "4", ",", "5", "]", "}", "]", "}", ",", "true", "]"]) -->
 
-          - input: ["[", "1", "2", "null", "3", ""raccooon"", "[", "4", "[", "5", "true", "6", "]", "7", "]", "8", ""luke"", "]"]
+          - input: ["[", "1", "2", "null", "{" , ""name"", ":", ""raccoon"", ""class"", ":", "2", "}", ""raccooon"", "[", "4", "[", "5", "true", "6", "]", "7", "]", "8", ""luke"", "]"]
 
           - output: [
             {
@@ -57,53 +57,113 @@
                 },
                 {
                   key: 4,
-                  type: 'number'
-                  value: '3',
-                  subType: null,
-                  child: null,
+                  type: 'object'
+                  value: '{',
+                  subType: objectOpen,
+                  child: [
+                    {
+                      value : {
+                        propKey: {
+                          value: 'name',
+                          type: 'string'
+
+                        },
+                        propValue: {
+                          value: 'crong'
+                          type: 'string'
+                        }
+                      }
+                      type: objectProperty;
+                    },
+                    {
+                      value : {
+                        propKey: {
+                          value: 'class',
+                          type: 'string'
+
+                        },
+                        propValue: {
+                          value: 2,
+                          type: 'number'
+                        }
+                      }
+                      type: objectProperty;
+                    }
+                      ]
+                    },
+
+                                        {
+                      key: 8,
+                      type: 'string'
+                      value: 'class',
+                      subType: ObjectKey,
+                      child: null,
+                    },
+                                        {
+                      key: 9,
+                      type: 'colon'
+                      value: ':',
+                      subType: null,
+                      child: null,
+                    },
+                                        {
+                      key: 10,
+                      type: 'number'
+                      value: 2,
+                      subType: objectValue,
+                      child: null,
+                    },
+                  ],
+                },
+               {
+                key: 11,
+                type: 'object'
+                value: '}',
+                subType: objectClose,
+                child: null,
                 },
                 {
-                  key: 5,
+                  key: 12,
                   type: 'string'
                   value: 'raccoon',
                   subType: null,
                   child: null,
                 },
                 {
-                  key: 6,
+                  key: 13,
                   type: 'array'
                   value: '[',
                   subType: 'arrayOpen',
                   child: [
                     {
-                      key: 7,
+                      key: 14,
                       type: 'number'
                       value: '4',
                       subType: null,
                       child: null,
                     },
                     {
-                      key: 8,
+                      key: 15,
                       type: 'array'
                       value: '[',
                       subType: 'arrayOpen',
                       child: [
                         {
-                          key: 9,
+                          key: 16,
                           type: 'number'
                           value: '5',
                           subType: null,
                           child: null,
                         },
                         {
-                          key: 10,
+                          key: 17,
                           type: 'boolean'
                           value: true,
                           subType: null,
                           child: null,
                         },
                         {
-                          key: 11,
+                          key: 18,
                           type: 'number'
                           value: 6,
                           subType: null,
@@ -112,14 +172,14 @@
                       ],
                     },
                     {
-                      key: 12,
+                      key: 19,
                       type: 'array'
                       value: ']',
                       subType: 'arrayClose',
                       child: null,
                     },
                     {
-                      key: 13,
+                      key: 20,
                       type: 'number'
                       value: '7',
                       subType: null,
@@ -128,21 +188,21 @@
                   ],
                 },
                 {
-                  key: 14,
+                  key: 21,
                   type: 'array'
                   value: ']',
                   subType: 'arrayClose',
                   child: null,
                 },
                 {
-                  key: 15,
+                  key: 22,
                   type: 'number'
                   value: 8,
                   subType: null,
                   child: null,
                 },
                 {
-                  key: 16,
+                  key: 23,
                   type: 'string'
                   value: 'luke',
                   subType: null,
@@ -151,7 +211,7 @@
               ]
             },
             {
-              key: 17,
+              key: 24,
               type: 'array'
               value: ']',
               subType: 'arrayClose',
